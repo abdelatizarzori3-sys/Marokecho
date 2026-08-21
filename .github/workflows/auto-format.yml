@@ -33,7 +33,7 @@ jobs:
           isort app.py components.py test.py || true
 
       - name: 💾 حفظ التغييرات
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "🎨 تنسيق تلقائي للكود (Auto-format)"
           file_pattern: "*.py"
