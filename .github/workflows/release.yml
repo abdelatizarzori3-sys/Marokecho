@@ -1,0 +1,56 @@
+name: 🚀 نشر إصدار
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 📥 استنساخ المستودع
+        uses: actions/checkout@v4
+
+      - name: 🐍 إعداد Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 تثبيت المتطلبات
+        run: |
+          pip install -r requirements.txt
+
+      - name: 🧪 تشغيل الاختبارات
+        run: python test.py
+
+      - name: 📦 إنشاء ملف ZIP
+        run: |
+          zip -r mrook-echo-${{ github.ref_name }}.zip . -x "*.git*" -x "__pycache__/*" -x "*.pyc"
+
+      - name: 🚀 نشر الإصدار
+        uses: softprops/action-gh-release@v1
+        with:
+          files: mrook-echo-*.zip
+          body: |
+            ## ⚡ مروق ايكو الخارق - ${{ github.ref_name }}
+
+            ### 🆕 ما الجديد؟
+            - تحسينات في الأداء
+            - إصلاحات الأخطاء
+
+            ### 📦 المحتويات
+            - تطبيق Tkinter
+            - واجهة ويب HTML/CSS/JS
+            - اختبارات شاملة
+
+            ### 🚀 التثبيت
+            ```bash
+            unzip mrook-echo-${{ github.ref_name }}.zip
+            python app.py
+            ```
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

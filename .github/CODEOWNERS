@@ -1,0 +1,8 @@
+# CODEOWNERS - مسؤولو المراجعة
+# يتم طلب مراجعة هؤلاء المسؤولين تلقائياً على كل PR
+
+* @${{ github.actor }}
+
+# الملفات الحساسة
+.github/ @${{ github.actor }}
+app.py @${{ github.actor }}

@@ -1,0 +1,13 @@
+{
+    "name": "مروق AI الكمومي",
+    "short_name": "مروق",
+    "description": "مساعد ذكاء اصطناعي كمومي متقدم",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0a0a1a",
+    "theme_color": "#00f3ff",
+    "lang": "ar",
+    "icons": [
+        { "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E⚡%3C/text%3E%3C/svg%3E", "sizes": "any" }
+    ]
+}
