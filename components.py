@@ -2,9 +2,10 @@
 مكونات واجهة المستخدم المخصصة
 Custom UI Components for Mrook Echo
 """
+
+import re
 import tkinter as tk
 from tkinter import ttk
-import re
 
 
 class StyledFrame(ttk.Frame):
@@ -87,14 +88,19 @@ class StatusBar(ttk.Frame):
         separator.pack(fill=tk.X, pady=(0, 5))
 
         # تسمية الحالة
-        self.label = ttk.Label(self, textvariable=textvariable, 
-                              style="Status.TLabel", anchor=tk.W)
+        self.label = ttk.Label(
+            self, textvariable=textvariable, style="Status.TLabel", anchor=tk.W
+        )
         self.label.pack(fill=tk.X)
 
         # مؤشر النشاط
         self.activity_var = tk.StringVar(value="●")
-        self.activity_label = ttk.Label(self, textvariable=self.activity_var,
-                                       foreground="#48bb78", font=("Segoe UI", 8))
+        self.activity_label = ttk.Label(
+            self,
+            textvariable=self.activity_var,
+            foreground="#48bb78",
+            font=("Segoe UI", 8),
+        )
         self.activity_label.pack(side=tk.RIGHT, padx=5)
 
     def set_busy(self):
@@ -125,15 +131,16 @@ class ProgressCard(ttk.Frame):
         ttk.Label(self, text=title, style="Header.TLabel").pack(anchor=tk.W)
 
         # شريط التقدم
-        self.progress = ttk.Progressbar(self, orient=tk.HORIZONTAL, 
-                                       length=300, mode="determinate",
-                                       maximum=maximum)
+        self.progress = ttk.Progressbar(
+            self, orient=tk.HORIZONTAL, length=300, mode="determinate", maximum=maximum
+        )
         self.progress.pack(fill=tk.X, pady=(10, 5))
 
         # النسبة المئوية
         self.percent_var = tk.StringVar(value="0%")
-        ttk.Label(self, textvariable=self.percent_var, 
-                 font=("Segoe UI", 10, "bold")).pack(anchor=tk.E)
+        ttk.Label(
+            self, textvariable=self.percent_var, font=("Segoe UI", 10, "bold")
+        ).pack(anchor=tk.E)
 
     def set_value(self, value):
         """تعيين قيمة التقدم"""
@@ -163,9 +170,15 @@ class InfoTooltip:
         self.tooltip.wm_overrideredirect(True)
         self.tooltip.wm_geometry(f"+{x}+{y}")
 
-        label = ttk.Label(self.tooltip, text=self.text, 
-                         background="#ffffe0", relief="solid", borderwidth=1,
-                         padding=5, font=("Segoe UI", 9))
+        label = ttk.Label(
+            self.tooltip,
+            text=self.text,
+            background="#ffffe0",
+            relief="solid",
+            borderwidth=1,
+            padding=5,
+            font=("Segoe UI", 9),
+        )
         label.pack()
 
     def hide(self, event=None):
