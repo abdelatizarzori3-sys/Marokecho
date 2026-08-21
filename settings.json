@@ -1,0 +1,33 @@
+{
+  "app_name": "مروق ايكو الخارق",
+  "version": "1.0.0",
+  "theme": "light",
+  "language": "ar",
+  "default_values": {
+    "time": 0,
+    "energy": 0
+  },
+  "limits": {
+    "max_time": 1440,
+    "max_energy": 100,
+    "min_value": 0
+  },
+  "ui": {
+    "window_width": 600,
+    "window_height": 500,
+    "font_family": "Segoe UI",
+    "font_size": 10,
+    "show_status_bar": true,
+    "auto_save": false
+  },
+  "notifications": {
+    "enabled": true,
+    "sound": false,
+    "duration": 3
+  },
+  "last_session": {
+    "date": "2026-08-21",
+    "time_value": 0,
+    "energy_value": 0
+  }
+}

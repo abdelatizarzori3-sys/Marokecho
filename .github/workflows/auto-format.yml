@@ -1,0 +1,39 @@
+name: 🎨 تنسيق تلقائي
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  auto-format:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 📥 استنساخ المستودع
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: 🐍 إعداد Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 تثبيت أدوات التنسيق
+        run: |
+          pip install black isort autopep8
+
+      - name: 🎨 تنسيق الكود
+        run: |
+          black app.py components.py test.py || true
+          isort app.py components.py test.py || true
+
+      - name: 💾 حفظ التغييرات
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "🎨 تنسيق تلقائي للكود (Auto-format)"
+          file_pattern: "*.py"

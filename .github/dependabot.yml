@@ -1,0 +1,35 @@
+# Dependabot - مساعد التحديث التلقائي
+# يفحص المكتبات ويقترح تحديثات أسبوعياً
+
+version: 2
+updates:
+  # Python packages
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "09:00"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "python"
+    commit-message:
+      prefix: "📦"
+      include: "scope"
+    reviewers:
+      - "${{ github.actor }}"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "09:00"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "🔧"
+      include: "scope"
