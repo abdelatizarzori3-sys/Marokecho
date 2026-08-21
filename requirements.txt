@@ -1,0 +1,18 @@
+# مروق ايكو الخارق - المتطلبات
+# Mrook Echo - Requirements
+
+# Python Standard Library (مضمنة):
+# - tkinter
+# - json
+# - os
+# - time
+# - unittest
+# - re
+
+# لا توجد مكتبات خارجية مطلوبة للتطبيق الأساسي
+# No external packages required for the core application
+
+# للتطوير المستقبلي (اختياري):
+# matplotlib>=3.5.0    # لرسوم بيانية
+# pytest>=7.0.0        # لاختبارات متقدمة
+# pillow>=9.0.0        # لمعالجة الصور

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مروق ايكو الخارق | Mrook Echo</title>
+    <link rel="stylesheet" href="ui.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- الشريط العلوي -->
+        <header class="top-bar">
+            <div class="logo">
+                <span class="logo-icon">⚡</span>
+                <h1>مروق ايكو الخارق</h1>
+            </div>
+            <div class="theme-toggle">
+                <button id="themeBtn" class="icon-btn">🌙</button>
+            </div>
+        </header>
+
+        <!-- المحتوى الرئيسي -->
+        <main class="main-content">
+            <!-- بطاقة الوقت -->
+            <section class="card time-card">
+                <div class="card-header">
+                    <span class="card-icon">⏱️</span>
+                    <h2>الوقت</h2>
+                </div>
+                <div class="input-group">
+                    <label for="timeInput">الوقت (دقائق)</label>
+                    <input type="number" id="timeInput" min="0" placeholder="أدخل الوقت...">
+                    <span class="input-hint">دقيقة</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="timeProgress"></div>
+                </div>
+                <button class="btn btn-primary" id="updateTimeBtn">
+                    <span>تحديث الوقت</span>
+                </button>
+            </section>
+
+            <!-- بطاقة الطاقة -->
+            <section class="card energy-card">
+                <div class="card-header">
+                    <span class="card-icon">🔋</span>
+                    <h2>الطاقة</h2>
+                </div>
+                <div class="input-group">
+                    <label for="energyInput">الطاقة (%)</label>
+                    <input type="number" id="energyInput" min="0" max="100" placeholder="أدخل نسبة الطاقة...">
+                    <span class="input-hint">%</span>
+                </div>
+                <div class="energy-visual">
+                    <div class="battery">
+                        <div class="battery-level" id="batteryLevel"></div>
+                    </div>
+                    <span class="energy-percent" id="energyPercent">0%</span>
+                </div>
+                <button class="btn btn-primary" id="updateEnergyBtn">
+                    <span>تحديث الطاقة</span>
+                </button>
+            </section>
+
+            <!-- لوحة المعلومات -->
+            <section class="card dashboard-card">
+                <div class="card-header">
+                    <span class="card-icon">📊</span>
+                    <h2>لوحة المعلومات</h2>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-value" id="statTime">0</span>
+                        <span class="stat-label">دقيقة</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="statEnergy">0%</span>
+                        <span class="stat-label">طاقة</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="statStatus">🟢</span>
+                        <span class="stat-label">حالة</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- شريط الحالة -->
+        <footer class="status-bar">
+            <span class="status-indicator" id="statusIndicator">●</span>
+            <span class="status-text" id="statusText">جاهز للاستخدام</span>
+            <span class="version">v1.0.0</span>
+        </footer>
+    </div>
+
+    <!-- نافذة الإشعارات -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="ui.js"></script>
+</body>
+</html>
