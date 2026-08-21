@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: 📥 استنساخ المستودع
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: 🐍 إعداد Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
@@ -49,7 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 📥 استنساخ المستودع
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: 🔒 فحص الأمان (Bandit)
         run: |
@@ -62,7 +62,7 @@ jobs:
     needs: [test, security]
     steps:
       - name: 📥 استنساخ المستودع
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: 📦 بناء الحزمة
         run: |
