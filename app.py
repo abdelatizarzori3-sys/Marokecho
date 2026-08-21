@@ -2,13 +2,14 @@
 مروق ايكو الخارق - التطبيق الرئيسي
 Mrook Echo - Main Application
 """
-import tkinter as tk
-from tkinter import ttk, messagebox
-import time
+
 import json
 import os
+import time
+import tkinter as tk
+from tkinter import messagebox, ttk
 
-from components import StyledFrame, ValidationEntry, StatusBar
+from components import StatusBar, StyledFrame, ValidationEntry
 
 
 class MrookEcho:
@@ -40,57 +41,68 @@ class MrookEcho:
     def setup_styles(self):
         """إعداد تنسيقات ttk"""
         style = ttk.Style()
-        style.theme_use('clam')
+        style.theme_use("clam")
 
         # تنسيق الإطارات
         style.configure("TFrame", background="#f0f4f8")
         style.configure("Card.TFrame", background="#ffffff", relief="raised")
 
         # تنسيق العناوين
-        style.configure("Title.TLabel", 
-                       font=("Segoe UI", 18, "bold"),
-                       foreground="#1a365d",
-                       background="#f0f4f8",
-                       padding=10)
+        style.configure(
+            "Title.TLabel",
+            font=("Segoe UI", 18, "bold"),
+            foreground="#1a365d",
+            background="#f0f4f8",
+            padding=10,
+        )
 
-        style.configure("Header.TLabel",
-                       font=("Segoe UI", 12, "bold"),
-                       foreground="#2c5282",
-                       background="#f0f4f8")
+        style.configure(
+            "Header.TLabel",
+            font=("Segoe UI", 12, "bold"),
+            foreground="#2c5282",
+            background="#f0f4f8",
+        )
 
-        style.configure("TLabel", 
-                       font=("Segoe UI", 10),
-                       foreground="#2d3748",
-                       background="#f0f4f8")
+        style.configure(
+            "TLabel", font=("Segoe UI", 10), foreground="#2d3748", background="#f0f4f8"
+        )
 
         # تنسيق الحقول
-        style.configure("TEntry", 
-                       font=("Segoe UI", 11),
-                       padding=5)
+        style.configure("TEntry", font=("Segoe UI", 11), padding=5)
 
         # تنسيق الأزرار
-        style.configure("Primary.TButton",
-                       font=("Segoe UI", 10, "bold"),
-                       foreground="#ffffff",
-                       background="#3182ce",
-                       padding=8)
-        style.map("Primary.TButton",
-                 background=[("active", "#2b6cb0"), ("pressed", "#2c5282")])
+        style.configure(
+            "Primary.TButton",
+            font=("Segoe UI", 10, "bold"),
+            foreground="#ffffff",
+            background="#3182ce",
+            padding=8,
+        )
+        style.map(
+            "Primary.TButton",
+            background=[("active", "#2b6cb0"), ("pressed", "#2c5282")],
+        )
 
-        style.configure("Success.TButton",
-                       font=("Segoe UI", 10, "bold"),
-                       foreground="#ffffff",
-                       background="#38a169",
-                       padding=8)
-        style.map("Success.TButton",
-                 background=[("active", "#2f855a"), ("pressed", "#276749")])
+        style.configure(
+            "Success.TButton",
+            font=("Segoe UI", 10, "bold"),
+            foreground="#ffffff",
+            background="#38a169",
+            padding=8,
+        )
+        style.map(
+            "Success.TButton",
+            background=[("active", "#2f855a"), ("pressed", "#276749")],
+        )
 
         # شريط الحالة
-        style.configure("Status.TLabel",
-                       font=("Segoe UI", 9),
-                       foreground="#718096",
-                       background="#edf2f7",
-                       padding=5)
+        style.configure(
+            "Status.TLabel",
+            font=("Segoe UI", 9),
+            foreground="#718096",
+            background="#edf2f7",
+            padding=5,
+        )
 
     def build_ui(self):
         """بناء واجهة المستخدم"""
@@ -99,56 +111,83 @@ class MrookEcho:
         main_frame.pack(fill=tk.BOTH, expand=True)
 
         # العنوان
-        title_label = ttk.Label(main_frame, text="⚡ مروق ايكو الخارق", style="Title.TLabel")
+        title_label = ttk.Label(
+            main_frame, text="⚡ مروق ايكو الخارق", style="Title.TLabel"
+        )
         title_label.pack(pady=(0, 20))
 
         # بطاقة الوقت
         time_card = ttk.Frame(main_frame, style="Card.TFrame", padding=15)
         time_card.pack(fill=tk.X, pady=5)
 
-        ttk.Label(time_card, text="⏱️ الوقت (دقائق):", style="Header.TLabel").pack(anchor=tk.W)
+        ttk.Label(time_card, text="⏱️ الوقت (دقائق):", style="Header.TLabel").pack(
+            anchor=tk.W
+        )
 
         time_input_frame = ttk.Frame(time_card)
         time_input_frame.pack(fill=tk.X, pady=(5, 0))
 
-        self.entry_time = ValidationEntry(time_input_frame, textvariable=self.time_var, 
-                                          validate_type="int", width=20)
+        self.entry_time = ValidationEntry(
+            time_input_frame, textvariable=self.time_var, validate_type="int", width=20
+        )
         self.entry_time.pack(side=tk.LEFT, padx=(0, 10))
 
-        ttk.Button(time_input_frame, text="تحديث الوقت", 
-                  command=self.update_time, style="Primary.TButton").pack(side=tk.LEFT)
+        ttk.Button(
+            time_input_frame,
+            text="تحديث الوقت",
+            command=self.update_time,
+            style="Primary.TButton",
+        ).pack(side=tk.LEFT)
 
         # بطاقة الطاقة
         energy_card = ttk.Frame(main_frame, style="Card.TFrame", padding=15)
         energy_card.pack(fill=tk.X, pady=5)
 
-        ttk.Label(energy_card, text="🔋 الطاقة (%):", style="Header.TLabel").pack(anchor=tk.W)
+        ttk.Label(energy_card, text="🔋 الطاقة (%):", style="Header.TLabel").pack(
+            anchor=tk.W
+        )
 
         energy_input_frame = ttk.Frame(energy_card)
         energy_input_frame.pack(fill=tk.X, pady=(5, 0))
 
-        self.entry_energy = ValidationEntry(energy_input_frame, textvariable=self.energy_var,
-                                            validate_type="int", width=20)
+        self.entry_energy = ValidationEntry(
+            energy_input_frame,
+            textvariable=self.energy_var,
+            validate_type="int",
+            width=20,
+        )
         self.entry_energy.pack(side=tk.LEFT, padx=(0, 10))
 
-        ttk.Button(energy_input_frame, text="تحديث الطاقة", 
-                  command=self.update_energy, style="Primary.TButton").pack(side=tk.LEFT)
+        ttk.Button(
+            energy_input_frame,
+            text="تحديث الطاقة",
+            command=self.update_energy,
+            style="Primary.TButton",
+        ).pack(side=tk.LEFT)
 
         # بطاقة الإجراءات
         actions_card = ttk.Frame(main_frame, style="Card.TFrame", padding=15)
         actions_card.pack(fill=tk.X, pady=5)
 
-        ttk.Label(actions_card, text="🚀 الإجراءات السريعة:", style="Header.TLabel").pack(anchor=tk.W)
+        ttk.Label(
+            actions_card, text="🚀 الإجراءات السريعة:", style="Header.TLabel"
+        ).pack(anchor=tk.W)
 
         buttons_frame = ttk.Frame(actions_card)
         buttons_frame.pack(fill=tk.X, pady=(10, 0))
 
-        ttk.Button(buttons_frame, text="حفظ الإعدادات", 
-                  command=self.save_settings, style="Success.TButton").pack(side=tk.LEFT, padx=5)
-        ttk.Button(buttons_frame, text="إعادة تعيين", 
-                  command=self.reset_values).pack(side=tk.LEFT, padx=5)
-        ttk.Button(buttons_frame, text="عرض البيانات", 
-                  command=self.show_data).pack(side=tk.LEFT, padx=5)
+        ttk.Button(
+            buttons_frame,
+            text="حفظ الإعدادات",
+            command=self.save_settings,
+            style="Success.TButton",
+        ).pack(side=tk.LEFT, padx=5)
+        ttk.Button(buttons_frame, text="إعادة تعيين", command=self.reset_values).pack(
+            side=tk.LEFT, padx=5
+        )
+        ttk.Button(buttons_frame, text="عرض البيانات", command=self.show_data).pack(
+            side=tk.LEFT, padx=5
+        )
 
         # شريط الحالة
         self.status_bar = StatusBar(main_frame, textvariable=self.status_var)
@@ -167,13 +206,17 @@ class MrookEcho:
         """
         # التحقق من القيمة الفارغة
         if value is None or str(value).strip() == "":
-            messagebox.showwarning("تنبيه", f"حقل '{field_name}' فارغ! يرجى إدخال قيمة.")
+            messagebox.showwarning(
+                "تنبيه", f"حقل '{field_name}' فارغ! يرجى إدخال قيمة."
+            )
             return None
 
         try:
             num_val = int(value)
         except ValueError:
-            messagebox.showerror("خطأ", f"قيمة '{field_name}' يجب أن تكون رقماً صحيحاً!")
+            messagebox.showerror(
+                "خطأ", f"قيمة '{field_name}' يجب أن تكون رقماً صحيحاً!"
+            )
             return None
 
         # التحقق من القيم السالبة
@@ -229,7 +272,7 @@ class MrookEcho:
             settings = {
                 "time": self.time_var.get(),
                 "energy": self.energy_var.get(),
-                "last_updated": time.strftime("%Y-%m-%d %H:%M:%S")
+                "last_updated": time.strftime("%Y-%m-%d %H:%M:%S"),
             }
 
             with open("settings.json", "w", encoding="utf-8") as f:
@@ -273,11 +316,14 @@ class MrookEcho:
                 data_window.title("📊 بيانات الميزات والملاحظات")
                 data_window.geometry("500x400")
 
-                text_widget = tk.Text(data_window, wrap=tk.WORD, padx=10, pady=10,
-                                     font=("Segoe UI", 10))
+                text_widget = tk.Text(
+                    data_window, wrap=tk.WORD, padx=10, pady=10, font=("Segoe UI", 10)
+                )
                 text_widget.pack(fill=tk.BOTH, expand=True)
 
-                text_widget.insert(tk.END, json.dumps(data, ensure_ascii=False, indent=2))
+                text_widget.insert(
+                    tk.END, json.dumps(data, ensure_ascii=False, indent=2)
+                )
                 text_widget.config(state=tk.DISABLED)
 
                 self.update_status("📊 تم عرض البيانات")

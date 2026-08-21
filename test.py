@@ -2,18 +2,19 @@
 اختبارات تطبيق مروق ايكو الخارق
 Mrook Echo - Test Suite
 """
-import unittest
-import tkinter as tk
-from tkinter import ttk
+
 import json
 import os
 import sys
+import tkinter as tk
+import unittest
+from tkinter import ttk
 
 # إضافة المسار
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from app import MrookEcho
-from components import ValidationEntry, StatusBar, ProgressCard
+from components import ProgressCard, StatusBar, ValidationEntry
 
 
 class TestValidationEntry(unittest.TestCase):
