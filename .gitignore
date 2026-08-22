@@ -61,3 +61,4 @@ htmlcov/
 *.tar.gz
 *.whl
 .env
+.env
