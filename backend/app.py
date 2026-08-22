@@ -4,6 +4,7 @@ Flask API مع دعم Kimi AI + Weather + Time
 """
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
+from dotenv import load_dotenv
 import os
 import json
 import time
@@ -14,6 +15,7 @@ import requests
 
 app = Flask(__name__, static_folder='../frontend')
 CORS(app)
+load_dotenv()
 
 # ===== إعدادات API =====
 KIMI_API_KEY = os.getenv('KIMI_API_KEY', '')
@@ -160,16 +162,16 @@ def ask_kimi_ai(question, lang):
 def quantum_brain_response(message, lang):
     """رد الدماغ الكمومي الاحتياطي"""
     responses = {
-        'ar': f'⚡ فهمت سؤالك: "{message[:40]}..." أنا أتعلم باستمرار! جرب الاتصال بـ Kimi API للردود الأذكى.',
-        'en': f'⚡ Got your question: "{message[:40]}..." I'm constantly learning! Try connecting Kimi API for smarter responses.',
-        'fr': f'⚡ J'ai compris: "{message[:40]}..." J'apprends constamment!',
-        'es': f'⚡ Entendí: "{message[:40]}..." ¡Aprendo constantemente!',
-        'de': f'⚡ Verstanden: "{message[:40]}..." Ich lerne ständig!',
-        'zh': f'⚡ 明白了："{message[:40]}..." 我在不断学习！',
-        'ja': f'⚡ 了解："{message[:40]}..." 絶えず学んでいます！',
-        'ru': f'⚡ Понял: "{message[:40]}..." Я постоянно учусь!',
-        'tr': f'⚡ Anladım: "{message[:40]}..." Sürekli öğreniyorum!',
-        'ur': f'⚡ سمجھا: "{message[:40]}..." میں مسلسل سیکھ رہا ہوں!'
+        'ar': f"⚡ فهمت سؤالك: '{message[:40]}...' أنا أتعلم باستمرار! جرب الاتصال بـ Kimi API للردود الأذكى.",
+        'en': f"⚡ Got your question: '{message[:40]}...' I'm constantly learning! Try connecting Kimi API for smarter responses.",
+        'fr': f"⚡ J'ai compris: '{message[:40]}...' J'apprends constamment!",
+        'es': f"⚡ Entendí: '{message[:40]}...' ¡Aprendo constantemente!",
+        'de': f"⚡ Verstanden: '{message[:40]}...' Ich lerne ständig!",
+        'zh': f"⚡ 明白了：'{message[:40]}...' 我在不断学习！",
+        'ja': f"⚡ 了解：'{message[:40]}...' 絶えず学んでいます！",
+        'ru': f"⚡ Понял: '{message[:40]}...' Я постоянно учусь!",
+        'tr': f"⚡ Anladım: '{message[:40]}...' Sürekli öğreniyorum!",
+        'ur': f"⚡ سمجھا: '{message[:40]}...' میں مسلسل سیکھ رہا ہوں!"
     }
     return responses.get(lang, responses['en'])
 
