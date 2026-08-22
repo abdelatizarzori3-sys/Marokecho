@@ -43,12 +43,12 @@ def call_gemini(message, lang="ar"):
     if not GEMINI_KEY:
         return None, "مفتاح Gemini غير مُعدّ"
     try:
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key={GEMINI_KEY}"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_KEY}"
         payload = {
             "contents": [{"parts": [{"text": message}]}],
             "generationConfig": {"temperature": 0.7, "maxOutputTokens": 2048}
         }
-        r = requests.post(url, json=payload, headers={"Content-Type": "application/json"}, timeout=30)
+        r = requests.post(url, json=payload, timeout=30)
         data = r.json()
         if "candidates" in data and data["candidates"]:
             text = data["candidates"][0]["content"]["parts"][0]["text"]

@@ -1,64 +1,18 @@
-# ============================================
-# مروق ايكو الخارق - .gitignore
-# ============================================
+# مفاتيح API
+.env
 
-# Python
+# بايثون
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
+*.pyc
+*.pyo
 *.egg-info/
-.installed.cfg
-*.egg
 
-# بيئة افتراضية
-venv/
-env/
-ENV/
-.venv
+# نسخ احتياطية
+*.backup*
+*.bak
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# ملفات الإعدادات المحلية
-settings_local.json
+# Termux
+.termux/
 .env
-.env.local
-
-# سجلات
-*.log
-logs/
-
-# تغطية الاختبارات
-.coverage
-htmlcov/
-.pytest_cache/
-
-# حزم
-*.zip
-*.tar.gz
-*.whl
-.env
-.env
+*.backup
+__pycache__/
