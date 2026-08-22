@@ -43,7 +43,7 @@ def call_gemini(message, lang="ar"):
     if not GEMINI_KEY:
         return None, "مفتاح Gemini غير مُعدّ"
     try:
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key={GEMINI_KEY}"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={GEMINI_KEY}"
         payload = {
             "contents": [{"parts": [{"text": message}]}],
             "generationConfig": {"temperature": 0.7, "maxOutputTokens": 2048}

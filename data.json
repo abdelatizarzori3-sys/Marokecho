@@ -127,6 +127,214 @@
       "engine": "gemini",
       "timestamp": "2026-08-22T20:32:56.496425",
       "quantum_signature": 0.010737440231625595
+    },
+    {
+      "id": "78f4a7513cc6",
+      "role": "user",
+      "content": "مرحبا",
+      "engine": "gemini",
+      "timestamp": "2026-08-22T20:51:16.205867",
+      "quantum_signature": 0.5444770613412381
+    },
+    {
+      "id": "2a8aa5109cd4",
+      "role": "assistant",
+      "content": "عذراً، لا يمكنني الرد الآن. (('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')))",
+      "engine": "fallback",
+      "timestamp": "2026-08-22T20:52:03.903589",
+      "quantum_signature": 0.6357803498664308
+    },
+    {
+      "id": "e9054de39254",
+      "role": "user",
+      "content": "مرحبا",
+      "engine": "gemini",
+      "timestamp": "2026-08-22T20:57:55.250933",
+      "quantum_signature": 0.9155880930803582
+    },
+    {
+      "id": "a83c1de54f20",
+      "role": "assistant",
+      "content": "عذراً، لا يمكنني الرد الآن. (رد فارغ من Gemini)",
+      "engine": "fallback",
+      "timestamp": "2026-08-22T20:57:56.342876",
+      "quantum_signature": 0.8259414289206565
+    },
+    {
+      "id": "3fd4c183ce29",
+      "role": "user",
+      "content": "مرحبا",
+      "engine": "gemini",
+      "timestamp": "2026-08-22T21:01:36.922404",
+      "quantum_signature": 0.8643568924524476
+    },
+    {
+      "id": "ff581a95389e",
+      "role": "assistant",
+      "content": "عذراً، لا يمكنني الرد الآن. (رد فارغ من Gemini)",
+      "engine": "fallback",
+      "timestamp": "2026-08-22T21:01:42.562455",
+      "quantum_signature": 0.7396340594181036
+    },
+    {
+      "id": "f0a603feb99f",
+      "role": "user",
+      "content": "مرحبا",
+      "engine": "gemini",
+      "timestamp": "2026-08-22T21:02:01.870117",
+      "quantum_signature": 0.781706226737839
+    },
+    {
+      "id": "afe16c1a9828",
+      "role": "assistant",
+      "content": "عذراً، لا يمكنني الرد الآن. (رد فارغ من Gemini)",
+      "engine": "fallback",
+      "timestamp": "2026-08-22T21:02:03.783545",
+      "quantum_signature": 0.5626759779945888
+    },
+    {
+      "id": "fbcda183d075",
+      "role": "user",
+      "content": "مرحبا",
+      "engine": "gemini",
+      "timestamp": "2026-08-22T21:03:32.969305",
+      "quantum_signature": 0.9141669205230987
+    },
+    {
+      "id": "8911c6cb3cee",
+      "role": "assistant",
+      "content": "عذراً، لا يمكنني الرد الآن. (رد فارغ من Gemini)",
+      "engine": "fallback",
+      "timestamp": "2026-08-22T21:03:34.095478",
+      "quantum_signature": 0.6125124863919925
+    },
+    {
+      "id": "635c15ec57b4",
+      "role": "user",
+      "content": "Gemini",
+      "engine": "gemini",
+      "timestamp": "2026-08-22T21:03:49.467478",
+      "quantum_signature": 0.17468766551806814
+    },
+    {
+      "id": "393b12646096",
+      "role": "assistant",
+      "content": "عذراً، لا يمكنني الرد الآن. (رد فارغ من Gemini)",
+      "engine": "fallback",
+      "timestamp": "2026-08-22T21:03:52.609101",
+      "quantum_signature": 0.1003619846445174
+    },
+    {
+      "id": "ebfde12d3e18",
+      "role": "user",
+      "content": "مرحبا",
+      "engine": "gemini",
+      "timestamp": "2026-08-22T22:46:26.702265",
+      "quantum_signature": 0.8266166994516307
+    },
+    {
+      "id": "d5a2003833c5",
+      "role": "assistant",
+      "content": "عذراً، لا يمكنني الرد الآن. (رد فارغ من Gemini)",
+      "engine": "fallback",
+      "timestamp": "2026-08-22T22:46:28.504013",
+      "quantum_signature": 0.14081281650028787
+    },
+    {
+      "id": "ce4d3f0ed0eb",
+      "role": "user",
+      "content": "مرحبا",
+      "engine": "gemini",
+      "timestamp": "2026-08-22T22:49:45.702825",
+      "quantum_signature": 0.29575263415348474
+    },
+    {
+      "id": "f55bb6bc01fb",
+      "role": "assistant",
+      "content": "عذراً، لا يمكنني الرد الآن. (رد فارغ من Gemini)",
+      "engine": "fallback",
+      "timestamp": "2026-08-22T22:49:52.652855",
+      "quantum_signature": 0.739816674174981
+    },
+    {
+      "id": "a511b050b775",
+      "role": "user",
+      "content": "هاي",
+      "engine": "gemini",
+      "timestamp": "2026-08-22T22:50:19.136321",
+      "quantum_signature": 0.424294767309345
+    },
+    {
+      "id": "e26636f676af",
+      "role": "assistant",
+      "content": "عذراً، لا يمكنني الرد الآن. (رد فارغ من Gemini)",
+      "engine": "fallback",
+      "timestamp": "2026-08-22T22:50:19.849007",
+      "quantum_signature": 0.5263654094636409
+    },
+    {
+      "id": "94a43add51af",
+      "role": "user",
+      "content": "هب",
+      "engine": "gemini",
+      "timestamp": "2026-08-22T22:50:26.297060",
+      "quantum_signature": 0.7102762541422466
+    },
+    {
+      "id": "8acf08b0732d",
+      "role": "assistant",
+      "content": "عذراً، لا يمكنني الرد الآن. (رد فارغ من Gemini)",
+      "engine": "fallback",
+      "timestamp": "2026-08-22T22:50:26.690265",
+      "quantum_signature": 0.07920777831700176
+    },
+    {
+      "id": "40b681949d54",
+      "role": "user",
+      "content": "Hi",
+      "engine": "gemini",
+      "timestamp": "2026-08-22T22:51:50.988289",
+      "quantum_signature": 0.12860224741156856
+    },
+    {
+      "id": "aabe3d52c1ad",
+      "role": "assistant",
+      "content": "عذراً، لا يمكنني الرد الآن. (رد فارغ من Gemini)",
+      "engine": "fallback",
+      "timestamp": "2026-08-22T22:51:51.679069",
+      "quantum_signature": 0.30086990028174654
+    },
+    {
+      "id": "a9b3c4aa6827",
+      "role": "user",
+      "content": "Hi",
+      "engine": "gemini",
+      "timestamp": "2026-08-22T22:52:47.009952",
+      "quantum_signature": 0.40769635347819055
+    },
+    {
+      "id": "3ecbf5883356",
+      "role": "assistant",
+      "content": "عذراً، لا يمكنني الرد الآن. (رد فارغ من Gemini)",
+      "engine": "fallback",
+      "timestamp": "2026-08-22T22:52:47.802749",
+      "quantum_signature": 0.9452359505445733
+    },
+    {
+      "id": "778172121944",
+      "role": "user",
+      "content": "Hi",
+      "engine": "gemini",
+      "timestamp": "2026-08-22T23:40:06.916870",
+      "quantum_signature": 0.39326867423921397
+    },
+    {
+      "id": "578749b9451a",
+      "role": "assistant",
+      "content": "عذراً، لا يمكنني الرد الآن. (رد فارغ من Gemini)",
+      "engine": "fallback",
+      "timestamp": "2026-08-22T23:40:07.437382",
+      "quantum_signature": 0.8457631340791871
     }
   ],
   "quantum_state": {
@@ -134,5 +342,5 @@
     "entanglement": 0.5,
     "superposition": []
   },
-  "saved_at": "2026-08-22T20:32:56.500256"
+  "saved_at": "2026-08-22T23:40:07.445663"
 }
