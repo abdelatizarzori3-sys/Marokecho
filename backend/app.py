@@ -13,7 +13,7 @@ import datetime
 from datetime import timedelta
 import requests
 
-app = Flask(__name__, static_folder='../frontend')
+app = Flask(__name__, static_folder='..')
 CORS(app)
 load_dotenv()
 
@@ -27,12 +27,12 @@ WEATHER_API_KEY = os.getenv('OPENWEATHER_API_KEY', '')
 @app.route('/')
 def serve_frontend():
     """خدمة الواجهة الأمامية"""
-    return send_from_directory('../frontend', 'index.html')
+    return send_from_directory('..', 'index.html')
 
 @app.route('/<path:path>')
 def serve_static(path):
     """الملفات الثابتة"""
-    return send_from_directory('../frontend', path)
+    return send_from_directory('..', path)
 
 @app.route('/api/assistant/info')
 def assistant_info():
