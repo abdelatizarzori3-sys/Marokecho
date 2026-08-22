@@ -1,349 +1,183 @@
 """
-مروق ايكو الخارق - التطبيق الرئيسي
-Mrook Echo - Main Application
+⚡ مروق AI الكمومي - Quantum AI Backend
+Flask API مع دعم Kimi AI + Weather + Time
 """
-
-import json
+from flask import Flask, request, jsonify, send_from_directory
+from flask_cors import CORS
+from dotenv import load_dotenv
 import os
+import json
 import time
-import tkinter as tk
-from tkinter import messagebox, ttk
+import random
+import datetime
+from datetime import timedelta
+import requests
 
-from components import StatusBar, StyledFrame, ValidationEntry
+app = Flask(__name__, static_folder='../frontend')
+CORS(app)
+load_dotenv()
 
+# ===== إعدادات API =====
+KIMI_API_KEY = os.getenv('KIMI_API_KEY', '')
+KIMI_API_URL = 'https://api.moonshot.cn/v1/chat/completions'
+WEATHER_API_KEY = os.getenv('OPENWEATHER_API_KEY', '')
 
-class MrookEcho:
-    """فئة التطبيق الرئيسية - تطبيق إدارة الوقت والطاقة"""
+# ===== المسارات =====
 
-    def __init__(self, root):
-        self.root = root
-        self.root.title("مروق ايكو الخارق | Mrook Echo")
-        self.root.geometry("600x500")
-        self.root.minsize(500, 400)
+@app.route('/')
+def serve_frontend():
+    """خدمة الواجهة الأمامية"""
+    return send_from_directory('../frontend', 'index.html')
 
-        # تحميل الإعدادات
-        self.settings = self.load_settings()
+@app.route('/<path:path>')
+def serve_static(path):
+    """الملفات الثابتة"""
+    return send_from_directory('../frontend', path)
 
-        # المتغيرات
-        self.time_var = tk.StringVar(value="0")
-        self.energy_var = tk.StringVar(value="0")
-        self.status_var = tk.StringVar(value="في حالة انتظار...")
+@app.route('/api/assistant/info')
+def assistant_info():
+    """معلومات المساعد"""
+    return jsonify({
+        "status": "quantum-active",
+        "name": "مروق AI الكمومي",
+        "version": "2.0.0-Quantum",
+        "languages": ["ar", "en", "fr", "es", "de", "zh", "ja", "ru", "tr", "ur"],
+        "features": ["chat", "voice", "weather", "time", "touch", "kimi"],
+        "server_time": datetime.datetime.now().isoformat()
+    })
 
-        # تطبيق التنسيق
-        self.setup_styles()
+@app.route('/api/chat', methods=['POST'])
+def chat():
+    """محادثة مع Kimi AI"""
+    data = request.json or {}
+    message = data.get('message', '').strip()
+    lang = data.get('lang', 'ar')
 
-        # بناء الواجهة
-        self.build_ui()
+    if not message:
+        return jsonify({"error": "Empty message"}), 400
 
-        # تحديث أولي
-        self.update_status("جاهز للاستخدام")
+    # محاولة الاتصال بـ Kimi API
+    kimi_response = ask_kimi_ai(message, lang)
 
-    def setup_styles(self):
-        """إعداد تنسيقات ttk"""
-        style = ttk.Style()
-        style.theme_use("clam")
+    if kimi_response:
+        return jsonify({
+            "status": "success",
+            "source": "kimi-ai",
+            "response": kimi_response,
+            "lang": lang,
+            "timestamp": datetime.datetime.now().isoformat()
+        })
 
-        # تنسيق الإطارات
-        style.configure("TFrame", background="#f0f4f8")
-        style.configure("Card.TFrame", background="#ffffff", relief="raised")
+    # رد احتياطي من الدماغ الكمومي
+    return jsonify({
+        "status": "success",
+        "source": "quantum-brain",
+        "response": quantum_brain_response(message, lang),
+        "lang": lang,
+        "timestamp": datetime.datetime.now().isoformat()
+    })
 
-        # تنسيق العناوين
-        style.configure(
-            "Title.TLabel",
-            font=("Segoe UI", 18, "bold"),
-            foreground="#1a365d",
-            background="#f0f4f8",
-            padding=10,
+@app.route('/api/weather')
+def get_weather():
+    """الطقس"""
+    city = request.args.get('city', 'Riyadh')
+
+    # محاكاة بيانات الطقس
+    conditions = [
+        {"icon": "☀️", "desc": "مشمس", "temp": 32, "humidity": 45, "wind": 12, "visibility": 10},
+        {"icon": "⛅", "desc": "غائم جزئياً", "temp": 28, "humidity": 55, "wind": 15, "visibility": 9},
+        {"icon": "☁️", "desc": "غائم", "temp": 25, "humidity": 65, "wind": 18, "visibility": 7},
+    ]
+    w = random.choice(conditions)
+
+    return jsonify({
+        "status": "success",
+        "city": city,
+        "weather": w,
+        "timestamp": datetime.datetime.now().isoformat()
+    })
+
+@app.route('/api/time')
+def get_time():
+    """الوقت"""
+    now = datetime.datetime.now()
+    return jsonify({
+        "status": "success",
+        "time": now.strftime("%H:%M:%S"),
+        "date": now.strftime("%Y-%m-%d"),
+        "day": now.strftime("%A"),
+        "timestamp": int(now.timestamp())
+    })
+
+# ===== Kimi AI Integration =====
+
+def ask_kimi_ai(question, lang):
+    """السؤال Kimi AI عبر API"""
+    if not KIMI_API_KEY or KIMI_API_KEY == 'YOUR_KIMI_API_KEY':
+        return None
+
+    system_prompts = {
+        'ar': 'أنت مروق، مساعد ذكاء اصطناعي كمومي متطور. تتحدث بأسلوب مستقبلي، ودي، وذكي. أجب باللغة العربية.',
+        'en': 'You are Mrook, an advanced quantum AI assistant. Speak in a futuristic, friendly, and smart manner. Answer in English.',
+        'fr': 'Vous êtes Mrook, un assistant IA quantique avancé. Répondez en français.',
+        'es': 'Eres Mrook, un asistente de IA cuántico avanzado. Responde en español.',
+        'de': 'Du bist Mrook, ein fortschrittlicher quanten KI-Assistent. Antworte auf Deutsch.',
+        'zh': '你是Mrook，一个先进的量子AI助手。用中文回答。',
+        'ja': 'あなたはMrook、高度な量子AIアシスタントです。日本語で答えてください。',
+        'ru': 'Ты Mrook, продвинутый квантовый ИИ-ассистент. Отвечай на русском.',
+        'tr': 'Sen Mrook, gelişmiş bir kuantum yapay zeka asistanısın. Türkçe cevap ver.',
+        'ur': 'تم مروق ہو، ایک جدید کوانٹم AI اسسٹنٹ۔ اردو میں جواب دو۔'
+    }
+
+    try:
+        response = requests.post(
+            KIMI_API_URL,
+            headers={
+                'Content-Type': 'application/json',
+                'Authorization': f'Bearer {KIMI_API_KEY}'
+            },
+            json={
+                'model': 'moonshot-v1-8k',
+                'messages': [
+                    {'role': 'system', 'content': system_prompts.get(lang, system_prompts['en'])},
+                    {'role': 'user', 'content': question}
+                ],
+                'temperature': 0.7,
+                'max_tokens': 1000
+            },
+            timeout=30
         )
 
-        style.configure(
-            "Header.TLabel",
-            font=("Segoe UI", 12, "bold"),
-            foreground="#2c5282",
-            background="#f0f4f8",
-        )
-
-        style.configure(
-            "TLabel", font=("Segoe UI", 10), foreground="#2d3748", background="#f0f4f8"
-        )
-
-        # تنسيق الحقول
-        style.configure("TEntry", font=("Segoe UI", 11), padding=5)
-
-        # تنسيق الأزرار
-        style.configure(
-            "Primary.TButton",
-            font=("Segoe UI", 10, "bold"),
-            foreground="#ffffff",
-            background="#3182ce",
-            padding=8,
-        )
-        style.map(
-            "Primary.TButton",
-            background=[("active", "#2b6cb0"), ("pressed", "#2c5282")],
-        )
-
-        style.configure(
-            "Success.TButton",
-            font=("Segoe UI", 10, "bold"),
-            foreground="#ffffff",
-            background="#38a169",
-            padding=8,
-        )
-        style.map(
-            "Success.TButton",
-            background=[("active", "#2f855a"), ("pressed", "#276749")],
-        )
-
-        # شريط الحالة
-        style.configure(
-            "Status.TLabel",
-            font=("Segoe UI", 9),
-            foreground="#718096",
-            background="#edf2f7",
-            padding=5,
-        )
-
-    def build_ui(self):
-        """بناء واجهة المستخدم"""
-        # الإطار الرئيسي
-        main_frame = StyledFrame(self.root, padding=20)
-        main_frame.pack(fill=tk.BOTH, expand=True)
-
-        # العنوان
-        title_label = ttk.Label(
-            main_frame, text="⚡ مروق ايكو الخارق", style="Title.TLabel"
-        )
-        title_label.pack(pady=(0, 20))
-
-        # بطاقة الوقت
-        time_card = ttk.Frame(main_frame, style="Card.TFrame", padding=15)
-        time_card.pack(fill=tk.X, pady=5)
-
-        ttk.Label(time_card, text="⏱️ الوقت (دقائق):", style="Header.TLabel").pack(
-            anchor=tk.W
-        )
-
-        time_input_frame = ttk.Frame(time_card)
-        time_input_frame.pack(fill=tk.X, pady=(5, 0))
-
-        self.entry_time = ValidationEntry(
-            time_input_frame, textvariable=self.time_var, validate_type="int", width=20
-        )
-        self.entry_time.pack(side=tk.LEFT, padx=(0, 10))
-
-        ttk.Button(
-            time_input_frame,
-            text="تحديث الوقت",
-            command=self.update_time,
-            style="Primary.TButton",
-        ).pack(side=tk.LEFT)
-
-        # بطاقة الطاقة
-        energy_card = ttk.Frame(main_frame, style="Card.TFrame", padding=15)
-        energy_card.pack(fill=tk.X, pady=5)
-
-        ttk.Label(energy_card, text="🔋 الطاقة (%):", style="Header.TLabel").pack(
-            anchor=tk.W
-        )
-
-        energy_input_frame = ttk.Frame(energy_card)
-        energy_input_frame.pack(fill=tk.X, pady=(5, 0))
-
-        self.entry_energy = ValidationEntry(
-            energy_input_frame,
-            textvariable=self.energy_var,
-            validate_type="int",
-            width=20,
-        )
-        self.entry_energy.pack(side=tk.LEFT, padx=(0, 10))
-
-        ttk.Button(
-            energy_input_frame,
-            text="تحديث الطاقة",
-            command=self.update_energy,
-            style="Primary.TButton",
-        ).pack(side=tk.LEFT)
-
-        # بطاقة الإجراءات
-        actions_card = ttk.Frame(main_frame, style="Card.TFrame", padding=15)
-        actions_card.pack(fill=tk.X, pady=5)
-
-        ttk.Label(
-            actions_card, text="🚀 الإجراءات السريعة:", style="Header.TLabel"
-        ).pack(anchor=tk.W)
-
-        buttons_frame = ttk.Frame(actions_card)
-        buttons_frame.pack(fill=tk.X, pady=(10, 0))
-
-        ttk.Button(
-            buttons_frame,
-            text="حفظ الإعدادات",
-            command=self.save_settings,
-            style="Success.TButton",
-        ).pack(side=tk.LEFT, padx=5)
-        ttk.Button(buttons_frame, text="إعادة تعيين", command=self.reset_values).pack(
-            side=tk.LEFT, padx=5
-        )
-        ttk.Button(buttons_frame, text="عرض البيانات", command=self.show_data).pack(
-            side=tk.LEFT, padx=5
-        )
-
-        # شريط الحالة
-        self.status_bar = StatusBar(main_frame, textvariable=self.status_var)
-        self.status_bar.pack(fill=tk.X, pady=(20, 0), side=tk.BOTTOM)
-
-    def validate_input(self, value, field_name):
-        """
-        التحقق من صحة إدخال المستخدم
-
-        Args:
-            value: القيمة المدخلة
-            field_name: اسم الحقل (لرسائل الخطأ)
-
-        Returns:
-            int: القيمة الصحيحة أو None في حالة الخطأ
-        """
-        # التحقق من القيمة الفارغة
-        if value is None or str(value).strip() == "":
-            messagebox.showwarning(
-                "تنبيه", f"حقل '{field_name}' فارغ! يرجى إدخال قيمة."
-            )
+        if response.status_code == 200:
+            data = response.json()
+            return data['choices'][0]['message']['content']
+        else:
+            print(f'Kimi API Error: {response.status_code} - {response.text}')
             return None
 
-        try:
-            num_val = int(value)
-        except ValueError:
-            messagebox.showerror(
-                "خطأ", f"قيمة '{field_name}' يجب أن تكون رقماً صحيحاً!"
-            )
-            return None
+    except Exception as e:
+        print(f'Kimi Connection Error: {e}')
+        return None
 
-        # التحقق من القيم السالبة
-        if num_val < 0:
-            messagebox.showerror("خطأ", f"قيمة '{field_name}' لا يمكن أن تكون سالبة!")
-            return None
+def quantum_brain_response(message, lang):
+    """رد الدماغ الكمومي الاحتياطي"""
+    responses = {
+        'ar': f"⚡ فهمت سؤالك: '{message[:40]}...' أنا أتعلم باستمرار! جرب الاتصال بـ Kimi API للردود الأذكى.",
+        'en': f"⚡ Got your question: '{message[:40]}...' I'm constantly learning! Try connecting Kimi API for smarter responses.",
+        'fr': f"⚡ J'ai compris: '{message[:40]}...' J'apprends constamment!",
+        'es': f"⚡ Entendí: '{message[:40]}...' ¡Aprendo constantemente!",
+        'de': f"⚡ Verstanden: '{message[:40]}...' Ich lerne ständig!",
+        'zh': f"⚡ 明白了：'{message[:40]}...' 我在不断学习！",
+        'ja': f"⚡ 了解：'{message[:40]}...' 絶えず学んでいます！",
+        'ru': f"⚡ Понял: '{message[:40]}...' Я постоянно учусь!",
+        'tr': f"⚡ Anladım: '{message[:40]}...' Sürekli öğreniyorum!",
+        'ur': f"⚡ سمجھا: '{message[:40]}...' میں مسلسل سیکھ رہا ہوں!"
+    }
+    return responses.get(lang, responses['en'])
 
-        return num_val
-
-    def update_time(self):
-        """تحديث قيمة الوقت مع التحقق من الصحة"""
-        try:
-            time_val = self.validate_input(self.time_var.get(), "الوقت")
-            if time_val is None:
-                return
-
-            # تحديث الواجهة
-            self.entry_time.delete(0, tk.END)
-            self.entry_time.insert(0, str(time_val))
-
-            self.update_status(f"✅ تم تحديث الوقت: {time_val} دقيقة")
-
-        except Exception as e:
-            messagebox.showerror("خطأ غير متوقع", f"حدث خطأ: {str(e)}")
-            self.update_status("❌ خطأ في تحديث الوقت")
-
-    def update_energy(self):
-        """تحديث قيمة الطاقة مع التحقق من الصحة"""
-        try:
-            energy_val = self.validate_input(self.energy_var.get(), "الطاقة")
-            if energy_val is None:
-                return
-
-            # التحقق من أن الطاقة لا تتجاوز 100%
-            if energy_val > 100:
-                messagebox.showwarning("تنبيه", "الطاقة لا يمكن أن تتجاوز 100%!")
-                energy_val = 100
-                self.energy_var.set("100")
-
-            # تحديث الواجهة
-            self.entry_energy.delete(0, tk.END)
-            self.entry_energy.insert(0, str(energy_val))
-
-            self.update_status(f"✅ تم تحديث الطاقة: {energy_val}%")
-
-        except Exception as e:
-            messagebox.showerror("خطأ غير متوقع", f"حدث خطأ: {str(e)}")
-            self.update_status("❌ خطأ في تحديث الطاقة")
-
-    def save_settings(self):
-        """حفظ الإعدادات في ملف JSON"""
-        try:
-            settings = {
-                "time": self.time_var.get(),
-                "energy": self.energy_var.get(),
-                "last_updated": time.strftime("%Y-%m-%d %H:%M:%S"),
-            }
-
-            with open("settings.json", "w", encoding="utf-8") as f:
-                json.dump(settings, f, ensure_ascii=False, indent=2)
-
-            self.update_status("💾 تم حفظ الإعدادات بنجاح!")
-            messagebox.showinfo("نجاح", "تم حفظ الإعدادات في ملف settings.json")
-
-        except Exception as e:
-            messagebox.showerror("خطأ", f"فشل حفظ الإعدادات: {str(e)}")
-
-    def load_settings(self):
-        """تحميل الإعدادات من ملف JSON"""
-        if os.path.exists("settings.json"):
-            try:
-                with open("settings.json", "r", encoding="utf-8") as f:
-                    return json.load(f)
-            except Exception:
-                return {}
-        return {}
-
-    def reset_values(self):
-        """إعادة تعيين القيم إلى الافتراضية"""
-        self.time_var.set("0")
-        self.energy_var.set("0")
-        self.entry_time.delete(0, tk.END)
-        self.entry_time.insert(0, "0")
-        self.entry_energy.delete(0, tk.END)
-        self.entry_energy.insert(0, "0")
-        self.update_status("🔄 تم إعادة التعيين")
-
-    def show_data(self):
-        """عرض البيانات من ملف data.json"""
-        try:
-            if os.path.exists("data.json"):
-                with open("data.json", "r", encoding="utf-8") as f:
-                    data = json.load(f)
-
-                # عرض البيانات في نافذة منبثقة
-                data_window = tk.Toplevel(self.root)
-                data_window.title("📊 بيانات الميزات والملاحظات")
-                data_window.geometry("500x400")
-
-                text_widget = tk.Text(
-                    data_window, wrap=tk.WORD, padx=10, pady=10, font=("Segoe UI", 10)
-                )
-                text_widget.pack(fill=tk.BOTH, expand=True)
-
-                text_widget.insert(
-                    tk.END, json.dumps(data, ensure_ascii=False, indent=2)
-                )
-                text_widget.config(state=tk.DISABLED)
-
-                self.update_status("📊 تم عرض البيانات")
-            else:
-                messagebox.showinfo("معلومات", "ملف data.json غير موجود!")
-        except Exception as e:
-            messagebox.showerror("خطأ", f"فشل قراءة البيانات: {str(e)}")
-
-    def update_status(self, message):
-        """تحديث شريط الحالة"""
-        self.status_var.set(message)
-        self.root.update_idletasks()
-
-
-def main():
-    """نقطة الدخول الرئيسية"""
-    root = tk.Tk()
-    app = MrookEcho(root)
-    root.mainloop()
-
-
-if __name__ == "__main__":
-    main()
+# ===== تشغيل =====
+if __name__ == '__main__':
+    print("⚡ مروق AI الكمومي - Quantum Backend")
+    print(f"🔮 Kimi API: {'متصل' if KIMI_API_KEY else 'غير متصل (أضف KIMI_API_KEY)'}")
+    print("🚀 http://localhost:5000")
+    app.run(host='0.0.0.0', port=5000, debug=True)
