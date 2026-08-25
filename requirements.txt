@@ -1,0 +1,39 @@
+<<<<<<< HEAD
+# ============================================
+# مروق ايكو الخارق - المتطلبات
+# Mrook Echo - Requirements
+# ============================================
+
+# --- Backend & API (مطلوبة للخادم) ---
+Flask>=2.3.0
+requests>=2.31.0
+python-dotenv>=1.0.0
+flask-cors>=4.0.0
+
+# --- للإنتاج (اختياري) ---
+gunicorn>=21.0.0
+
+# --- للتطوير المستقبلي (اختياري) ---
+# matplotlib>=3.5.0
+# pytest>=7.0.0
+# pillow>=9.0.0
+=======
+# مروق ايكو الخارق - المتطلبات
+# Mrook Echo - Requirements
+
+# Python Standard Library (مضمنة):
+# - tkinter
+# - json
+# - os
+# - time
+# - unittest
+# - re
+
+# لا توجد مكتبات خارجية مطلوبة للتطبيق الأساسي
+# No external packages required for the core application
+
+# للتطوير المستقبلي (اختياري):
+# matplotlib>=3.5.0    # لرسوم بيانية
+# pytest>=7.0.0        # لاختبارات متقدمة
+# pillow>=9.0.0        # لمعالجة الصور
+>>>>>>> 63817762f932797e3147d5f0fe56b5a03277307f

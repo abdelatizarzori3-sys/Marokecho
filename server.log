@@ -1,0 +1,55 @@
+nohup: ignoring input
+[H[2J[3J╔══════════════════════════════════════════╗
+║  ⚡ مروق AI الكمومي v3.0 — التشغيل الشامل  ║
+╚══════════════════════════════════════════╝
+
+🔴 إيقاف العمليات القديمة...
+🔑 التحقق من المفاتيح...
+   ✅ Gemini: AQ.Ab8RN6K-vInW6vlth...
+📦 تثبيت المتطلبات...
+
+==========================================
+🚀 تشغيل الخادم على المنفذ 5002...
+==========================================
+
+📱 افتح المتصفح على:
+   http://localhost:5002
+   http://127.0.0.1:5002
+
+==================================================
+⚡ مروق AI الكمومي v3.0 — Multi-Engine Quantum Backend
+🔮 Gemini: ✅ | Groq: ❌ | OpenRouter: ❌
+🧠 محادثات سابقة: 16
+🚀 http://localhost:5002
+==================================================
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5002
+ * Running on http://192.168.192.82:5002
+[33mPress CTRL+C to quit[0m
+192.168.192.82 - - [22/Aug/2026 20:50:54] "GET / HTTP/1.1" 200 -
+192.168.192.82 - - [22/Aug/2026 20:50:54] "[36mGET /app.js HTTP/1.1[0m" 304 -
+192.168.192.82 - - [22/Aug/2026 20:50:54] "[36mGET /style.css HTTP/1.1[0m" 304 -
+192.168.192.82 - - [22/Aug/2026 20:50:54] "GET /api/status HTTP/1.1" 200 -
+192.168.192.82 - - [22/Aug/2026 20:51:04] "GET /api/status HTTP/1.1" 200 -
+192.168.192.82 - - [22/Aug/2026 20:51:14] "GET /api/status HTTP/1.1" 200 -
+192.168.192.82 - - [22/Aug/2026 20:51:24] "GET /api/status HTTP/1.1" 200 -
+192.168.192.82 - - [22/Aug/2026 20:51:34] "GET /api/status HTTP/1.1" 200 -
+192.168.192.82 - - [22/Aug/2026 20:51:44] "GET /api/status HTTP/1.1" 200 -
+192.168.192.82 - - [22/Aug/2026 20:51:54] "GET /api/status HTTP/1.1" 200 -
+192.168.192.82 - - [22/Aug/2026 20:52:03] "POST /api/chat HTTP/1.1" 200 -
+192.168.192.82 - - [22/Aug/2026 20:52:04] "GET /api/status HTTP/1.1" 200 -
+192.168.192.82 - - [22/Aug/2026 20:52:14] "GET /api/status HTTP/1.1" 200 -
+192.168.192.82 - - [22/Aug/2026 20:52:24] "GET /api/status HTTP/1.1" 200 -
+192.168.192.82 - - [22/Aug/2026 20:52:34] "GET /api/status HTTP/1.1" 200 -
+192.168.192.82 - - [22/Aug/2026 20:52:44] "GET /api/status HTTP/1.1" 200 -
+192.168.192.82 - - [22/Aug/2026 20:52:54] "GET /api/status HTTP/1.1" 200 -
+192.168.192.82 - - [22/Aug/2026 20:53:05] "GET /api/status HTTP/1.1" 200 -
+192.168.192.82 - - [22/Aug/2026 20:53:15] "GET /api/status HTTP/1.1" 200 -
+192.168.192.82 - - [22/Aug/2026 20:53:25] "GET /api/status HTTP/1.1" 200 -
+192.168.192.82 - - [22/Aug/2026 20:53:35] "GET /api/status HTTP/1.1" 200 -
+192.168.192.82 - - [22/Aug/2026 20:53:45] "GET /api/status HTTP/1.1" 200 -
+192.168.192.82 - - [22/Aug/2026 20:53:55] "GET /api/status HTTP/1.1" 200 -
+start_marokecho.sh: line 58: 13242 Killed                     python3 app.py

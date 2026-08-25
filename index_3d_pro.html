@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#02020a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>مروق الكمومي v4.0 PRO — ابن النظام الروبوتي</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=Orbitron:wght@400;700;900&display=swap');
+
+:root {
+  --neon-cyan: #00f0ff;
+  --neon-pink: #ff2a6d;
+  --neon-purple: #d300f9;
+  --neon-blue: #2979ff;
+  --neon-gold: #ffd700;
+  --dark-void: #02020a;
+  --dark-surface: #0a0a1a;
+  --glass: rgba(255,255,255,0.03);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Tajawal', sans-serif;
+  background: var(--dark-void);
+  color: #fff;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+
+/* ===== DEEP SPACE BACKGROUND ===== */
+.space-bg {
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse at 15% 85%, rgba(0,240,255,0.08) 0%, transparent 45%),
+    radial-gradient(ellipse at 85% 15%, rgba(255,42,109,0.06) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 50%, rgba(41,121,255,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(211,0,249,0.05) 0%, transparent 40%),
+    linear-gradient(180deg, #02020a 0%, #050518 30%, #02020a 70%, #080820 100%);
+}
+
+/* Animated nebula clouds */
+.nebula {
+  position: fixed; border-radius: 50%; filter: blur(80px); z-index: 1; pointer-events: none;
+}
+.nebula-1 { width: 400px; height: 400px; background: rgba(0,240,255,0.06); top: -100px; left: -100px; animation: nebFloat 20s ease-in-out infinite; }
+.nebula-2 { width: 350px; height: 350px; background: rgba(255,42,109,0.05); bottom: -80px; right: -80px; animation: nebFloat 25s ease-in-out infinite reverse; }
+.nebula-3 { width: 300px; height: 300px; background: rgba(211,0,249,0.04); top: 40%; left: 60%; animation: nebFloat 18s ease-in-out infinite; }
+@keyframes nebFloat {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33% { transform: translate(30px,-20px) scale(1.1); }
+  66% { transform: translate(-20px,30px) scale(0.95); }
+}
+
+/* ===== HOLOGRAPHIC GRID ===== */
+.holo-grid {
+  position: fixed; inset: 0; z-index: 2; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0,240,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,240,255,0.025) 1px, transparent 1px);
+  background-size: 50px 50px;
+  perspective: 800px;
+  transform-style: preserve-3d;
+}
+.holo-grid::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 60%, rgba(0,240,255,0.03) 100%);
+}
+
+/* ===== PARTICLE SYSTEM ===== */
+.particle-field { position: fixed; inset: 0; z-index: 3; pointer-events: none; }
+
+/* ===== HUD OVERLAY ===== */
+.hud-overlay {
+  position: fixed; inset: 0; z-index: 5; pointer-events: none;
+  border: 1px solid rgba(0,240,255,0.08);
+  margin: 8px;
+  border-radius: 16px;
+}
+.hud-corner {
+  position: absolute; width: 20px; height: 20px;
+  border-color: var(--neon-cyan); border-style: solid;
+}
+.hud-corner.tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+.hud-corner.tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+.hud-corner.bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+.hud-corner.br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+/* ===== TOP BAR ===== */
+.top-bar {
+  position: fixed; top: 16px; left: 16px; right: 16px; z-index: 20;
+  display: flex; justify-content: space-between; align-items: center;
+  pointer-events: auto;
+}
+.brand {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(0,0,0,0.5); backdrop-filter: blur(20px);
+  border: 1px solid rgba(0,240,255,0.2); border-radius: 14px;
+  padding: 8px 16px;
+}
+.brand-icon { font-size: 1.4rem; animation: iconPulse 3s ease-in-out infinite; }
+@keyframes iconPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
+.brand-text {
+  font-family: 'Orbitron', sans-serif; font-size: 0.9rem; font-weight: 700;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink), var(--neon-purple));
+  background-size: 200% auto;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  animation: gradientShift 4s linear infinite;
+}
+@keyframes gradientShift { 0%{background-position:0%} 100%{background-position:200%} }
+.brand-sub { font-size: 0.65rem; color: rgba(255,255,255,0.4); margin-top: -2px; }
+
+.status-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(0,0,0,0.5); backdrop-filter: blur(20px);
+  border: 1px solid rgba(0,240,255,0.15); border-radius: 20px;
+  padding: 6px 14px; font-size: 0.7rem;
+}
+.status-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--neon-cyan);
+  box-shadow: 0 0 8px var(--neon-cyan); animation: statusPulse 2s infinite;
+}
+@keyframes statusPulse { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+/* ===== SIDE PANELS (HUD) ===== */
+.side-panel {
+  position: fixed; z-index: 15;
+  background: rgba(0,0,0,0.4); backdrop-filter: blur(15px);
+  border: 1px solid rgba(0,240,255,0.1); border-radius: 12px;
+  padding: 10px; font-size: 0.65rem; color: rgba(255,255,255,0.5);
+  font-family: 'Orbitron', monospace;
+}
+.side-panel.left { top: 80px; left: 16px; width: 100px; }
+.side-panel.right { top: 80px; right: 16px; width: 100px; }
+.hud-label { color: var(--neon-cyan); font-size: 0.6rem; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+.hud-value { color: #fff; font-size: 0.75rem; margin-bottom: 8px; }
+.hud-bar { height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; margin-bottom: 10px; }
+.hud-bar-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
+
+/* ===== Q-POINTS COUNTER ===== */
+.q-counter {
+  position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 15;
+  background: rgba(0,0,0,0.5); backdrop-filter: blur(15px);
+  border: 1px solid rgba(255,215,0,0.25); border-radius: 20px;
+  padding: 5px 18px; display: flex; align-items: center; gap: 8px;
+  font-family: 'Orbitron', monospace; font-size: 0.75rem; color: var(--neon-gold);
+  box-shadow: 0 0 20px rgba(255,215,0,0.08);
+}
+.q-icon { animation: qSpin 4s linear infinite; }
+@keyframes qSpin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+
+/* ===== MAIN 3D CANVAS AREA ===== */
+.canvas-container {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -55%);
+  width: 320px; height: 320px; z-index: 10;
+}
+#robotCanvas { width: 100%; height: 100%; }
+
+/* ===== EMOTION DISPLAY ===== */
+.emotion-display {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  margin-top: 170px; z-index: 12;
+  text-align: center; pointer-events: none;
+}
+.emotion-wave {
+  font-size: 0.7rem; color: rgba(255,255,255,0.3);
+  font-family: 'Orbitron', monospace; letter-spacing: 3px;
+}
+
+/* ===== CHAT TERMINAL (Bottom) ===== */
+.chat-terminal {
+  position: fixed; bottom: 12px; left: 12px; right: 12px; z-index: 20;
+  background: rgba(5,5,15,0.85); backdrop-filter: blur(30px);
+  border: 1px solid rgba(0,240,255,0.15); border-radius: 16px;
+  box-shadow: 0 -10px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(0,240,255,0.05);
+  display: flex; flex-direction: column;
+  height: 200px; overflow: hidden;
+}
+.chat-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 14px; border-bottom: 1px solid rgba(0,240,255,0.1);
+}
+.chat-title { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: var(--neon-cyan); }
+.chat-controls { display: flex; gap: 6px; }
+.ctrl-btn {
+  width: 26px; height: 26px; border-radius: 6px;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.5); font-size: 0.7rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s;
+}
+.ctrl-btn:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
+
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 10px 12px;
+  display: flex; flex-direction: column; gap: 8px;
+  scroll-behavior: smooth;
+}
+.chat-messages::-webkit-scrollbar { width: 3px; }
+.chat-messages::-webkit-scrollbar-thumb { background: var(--neon-cyan); border-radius: 3px; }
+
+.msg {
+  max-width: 88%; padding: 8px 14px; border-radius: 14px;
+  font-size: 0.82rem; line-height: 1.6; word-wrap: break-word;
+  animation: msgSlide 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+@keyframes msgSlide {
+  from { opacity: 0; transform: translateY(15px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.msg-user {
+  align-self: flex-start;
+  background: linear-gradient(135deg, rgba(0,240,255,0.1), rgba(0,240,255,0.02));
+  border: 1px solid rgba(0,240,255,0.2);
+  color: #e0ffff;
+}
+.msg-user::before {
+  content: '👤'; position: absolute; right: -22px; top: 50%; transform: translateY(-50%);
+  font-size: 0.9rem; opacity: 0.6;
+}
+.msg-bot {
+  align-self: flex-end;
+  background: linear-gradient(135deg, rgba(211,0,249,0.12), rgba(211,0,249,0.02));
+  border: 1px solid rgba(211,0,249,0.2);
+  color: #f0e0ff;
+}
+.msg-bot::before {
+  content: '🔮'; position: absolute; left: -22px; top: 50%; transform: translateY(-50%);
+  font-size: 0.9rem; opacity: 0.6;
+}
+.msg-time {
+  font-size: 0.55rem; color: rgba(255,255,255,0.25);
+  margin-top: 4px; display: block;
+}
+
+.typing-indicator {
+  align-self: flex-end; display: flex; gap: 4px; padding: 10px 14px;
+  background: rgba(211,0,249,0.08); border: 1px solid rgba(211,0,249,0.15);
+  border-radius: 14px;
+}
+.typing-indicator span {
+  width: 5px; height: 5px; border-radius: 50%; background: var(--neon-purple);
+  animation: typingBounce 1.2s infinite;
+}
+.typing-indicator span:nth-child(2) { animation-delay: 0.15s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes typingBounce {
+  0%,60%,100% { transform: translateY(0); }
+  30% { transform: translateY(-10px); }
+}
+
+.chat-input-area {
+  display: flex; gap: 8px; padding: 8px 12px;
+  border-top: 1px solid rgba(0,240,255,0.08);
+  background: rgba(0,0,0,0.3);
+}
+.chat-input {
+  flex: 1; background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(0,240,255,0.15); border-radius: 22px;
+  padding: 8px 16px; color: #fff; font-size: 0.82rem;
+  outline: none; transition: all 0.3s; font-family: 'Tajawal', sans-serif;
+}
+.chat-input:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 15px rgba(0,240,255,0.1), inset 0 0 10px rgba(0,240,255,0.03);
+}
+.chat-input::placeholder { color: rgba(255,255,255,0.25); }
+
+.mic-btn, .send-btn {
+  width: 38px; height: 38px; border-radius: 50%; border: none;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; transition: all 0.3s;
+}
+.mic-btn {
+  background: rgba(255,42,109,0.1); border: 1px solid rgba(255,42,109,0.25);
+  color: var(--neon-pink);
+}
+.mic-btn:hover { background: rgba(255,42,109,0.2); transform: scale(1.08); }
+.mic-btn.recording { animation: recPulse 1s infinite; background: rgba(255,42,109,0.3); }
+@keyframes recPulse { 0%,100%{box-shadow:0 0 0 0 rgba(255,42,109,0.4)} 50%{box-shadow:0 0 0 10px rgba(255,42,109,0)} }
+
+.send-btn {
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+  box-shadow: 0 0 15px rgba(0,240,255,0.25);
+}
+.send-btn:hover { transform: scale(1.1); box-shadow: 0 0 25px rgba(0,240,255,0.4); }
+
+/* ===== VOICE WAVE VISUALIZER ===== */
+.voice-wave {
+  position: fixed; bottom: 220px; left: 50%; transform: translateX(-50%);
+  z-index: 18; display: none; align-items: center; gap: 3px;
+}
+.voice-wave.active { display: flex; }
+.voice-wave-bar {
+  width: 3px; background: linear-gradient(to top, var(--neon-pink), var(--neon-purple));
+  border-radius: 2px; animation: waveBar 0.5s ease-in-out infinite alternate;
+}
+@keyframes waveBar { from { height: 8px; } to { height: 35px; } }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
+  .canvas-container { width: 260px; height: 260px; }
+  .side-panel { display: none; }
+  .chat-terminal { height: 180px; }
+  .brand-text { font-size: 0.75rem; }
+}
+
+/* ===== SCANLINE EFFECT ===== */
+.scanline {
+  position: fixed; inset: 0; z-index: 100; pointer-events: none;
+  background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.03) 50%);
+  background-size: 100% 4px;
+  opacity: 0.3;
+}
+</style>
+</head>
+<body>
+
+<div class="space-bg"></div>
+<div class="nebula nebula-1"></div>
+<div class="nebula nebula-2"></div>
+<div class="nebula nebula-3"></div>
+<div class="holo-grid"></div>
+<div class="particle-field" id="particleField"></div>
+<div class="scanline"></div>
+
+<div class="hud-overlay">
+  <div class="hud-corner tl"></div><div class="hud-corner tr"></div>
+  <div class="hud-corner bl"></div><div class="hud-corner br"></div>
+</div>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="brand">
+    <span class="brand-icon">🔮</span>
+    <div>
+      <div class="brand-text">MAROQ v4.0 PRO</div>
+      <div class="brand-sub">ابن النظام الروبوتي المتكامل</div>
+    </div>
+  </div>
+  <div class="status-pill">
+    <div class="status-dot"></div>
+    <span id="connectionStatus">متصل بالنظام الكمومي</span>
+  </div>
+</div>
+
+<!-- SIDE PANELS -->
+<div class="side-panel left">
+  <div class="hud-label">الذاكرة</div>
+  <div class="hud-value" id="memUsage">47%</div>
+  <div class="hud-bar"><div class="hud-bar-fill" style="width:47%; background:var(--neon-cyan);"></div></div>
+  <div class="hud-label">المشاعر</div>
+  <div class="hud-value" id="emotionVal">محايد</div>
+  <div class="hud-bar"><div class="hud-bar-fill" id="emotionBar" style="width:50%; background:var(--neon-purple);"></div></div>
+  <div class="hud-label">التعلم</div>
+  <div class="hud-value" id="learnRate">+2.4%</div>
+  <div class="hud-bar"><div class="hud-bar-fill" style="width:65%; background:var(--neon-gold);"></div></div>
+</div>
+
+<div class="side-panel right">
+  <div class="hud-label">CPU</div>
+  <div class="hud-value" id="cpuVal">12%</div>
+  <div class="hud-bar"><div class="hud-bar-fill" style="width:12%; background:#4caf50;"></div></div>
+  <div class="hud-label">GPU</div>
+  <div class="hud-value" id="gpuVal">8%</div>
+  <div class="hud-bar"><div class="hud-bar-fill" style="width:8%; background:#2196f3;"></div></div>
+  <div class="hud-label">شبكة</div>
+  <div class="hud-value" id="netVal">24ms</div>
+  <div class="hud-bar"><div class="hud-bar-fill" style="width:80%; background:var(--neon-cyan);"></div></div>
+</div>
+
+<!-- Q-POINTS -->
+<div class="q-counter">
+  <span class="q-icon">⚡</span>
+  <span id="qValue">Q-7842.91</span>
+</div>
+
+<!-- 3D ROBOT CANVAS -->
+<div class="canvas-container">
+  <canvas id="robotCanvas"></canvas>
+</div>
+
+<!-- EMOTION WAVE -->
+<div class="emotion-display">
+  <div class="emotion-wave" id="emotionWave">● ● ● ● ● ● ● ● ● ●</div>
+</div>
+
+<!-- VOICE WAVE -->
+<div class="voice-wave" id="voiceWave">
+  <div class="voice-wave-bar" style="animation-delay:0s"></div>
+  <div class="voice-wave-bar" style="animation-delay:0.1s"></div>
+  <div class="voice-wave-bar" style="animation-delay:0.2s"></div>
+  <div class="voice-wave-bar" style="animation-delay:0.05s"></div>
+  <div class="voice-wave-bar" style="animation-delay:0.15s"></div>
+  <div class="voice-wave-bar" style="animation-delay:0.25s"></div>
+  <div class="voice-wave-bar" style="animation-delay:0.1s"></div>
+  <div class="voice-wave-bar" style="animation-delay:0.2s"></div>
+</div>
+
+<!-- CHAT TERMINAL -->
+<div class="chat-terminal">
+  <div class="chat-header">
+    <div class="chat-title">
+      <span>💬</span>
+      <span>المحادثة الكمومية</span>
+    </div>
+    <div class="chat-controls">
+      <button class="ctrl-btn" onclick="clearChat()" title="مسح">🗑️</button>
+      <button class="ctrl-btn" onclick="speakLast()" title="قراءة">🔊</button>
+      <button class="ctrl-btn" onclick="exportChat()" title="تصدير">📤</button>
+    </div>
+  </div>
+  <div class="chat-messages" id="chatMessages"></div>
+  <div class="chat-input-area">
+    <button class="mic-btn" id="micBtn" onclick="toggleMic()">🎙️</button>
+    <input type="text" class="chat-input" id="chatInput"
+           placeholder="اكتب رسالتك... أو اضغط الميكروفون"
+           onkeypress="if(event.key==='Enter') sendMessage()">
+    <button class="send-btn" onclick="sendMessage()">➤</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// 3D ROBOT FACE — Canvas-based Pseudo-3D with Real-time Rendering
+// ============================================================
+const canvas = document.getElementById('robotCanvas');
+const ctx = canvas.getContext('2d');
+let W, H, cx, cy;
+
+function resize() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * 2;
+  canvas.height = rect.height * 2;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  ctx.scale(2, 2);
+  W = rect.width; H = rect.height;
+  cx = W/2; cy = H/2;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// Robot state
+let robot = {
+  headTilt: 0, headTurn: 0,
+  eyeLX: 0, eyeLY: 0, eyeRX: 0, eyeRY: 0,
+  blinkState: 0, blinkTimer: 0,
+  mouthOpen: 0, talking: false,
+  glowIntensity: 0.5, glowPhase: 0,
+  ringRotation: 0,
+  particles: [],
+  emotion: 'neutral',
+  breathPhase: 0
+};
+
+// Initialize particles
+for(let i=0; i<40; i++) {
+  robot.particles.push({
+    x: Math.random()*W, y: Math.random()*H,
+    vx: (Math.random()-0.5)*0.3, vy: (Math.random()-0.5)*0.3,
+    size: Math.random()*2+0.5,
+    alpha: Math.random()*0.5+0.2,
+    color: ['#00f0ff','#ff2a6d','#d300f9','#2979ff'][Math.floor(Math.random()*4)]
+  });
+}
+
+// Mouse tracking
+let mouseX = cx, mouseY = cy;
+document.addEventListener('mousemove', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  mouseX = (e.clientX - rect.left) * (W/rect.width);
+  mouseY = (e.clientY - rect.top) * (H/rect.height);
+});
+
+// Touch tracking
+document.addEventListener('touchmove', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  mouseX = (e.touches[0].clientX - rect.left) * (W/rect.width);
+  mouseY = (e.touches[0].clientY - rect.top) * (H/rect.height);
+});
+
+function drawRobot() {
+  ctx.clearRect(0, 0, W, H);
+
+  // Update animation values
+  robot.breathPhase += 0.02;
+  robot.glowPhase += 0.03;
+  robot.ringRotation += 0.008;
+  robot.glowIntensity = 0.4 + Math.sin(robot.glowPhase)*0.15;
+
+  // Head float (breathing)
+  const floatY = Math.sin(robot.breathPhase) * 4;
+
+  // Eye tracking
+  const lookX = (mouseX - cx) / cx;
+  const lookY = (mouseY - cy) / cy;
+  robot.eyeLX += (lookX*6 - robot.eyeLX) * 0.1;
+  robot.eyeLY += (lookY*4 - robot.eyeLY) * 0.1;
+  robot.eyeRX += (lookX*6 - robot.eyeRX) * 0.1;
+  robot.eyeRY += (lookY*4 - robot.eyeRY) * 0.1;
+
+  // Blink
+  robot.blinkTimer++;
+  if(robot.blinkTimer > 180 + Math.random()*120) {
+    robot.blinkState = 1; robot.blinkTimer = 0;
+  }
+  if(robot.blinkState > 0) {
+    robot.blinkState += 0.15;
+    if(robot.blinkState > Math.PI) robot.blinkState = 0;
+  }
+  const blinkScale = robot.blinkState > 0 ? Math.abs(Math.cos(robot.blinkState)) : 1;
+
+  // Mouth
+  if(robot.talking) {
+    robot.mouthOpen = 0.3 + Math.sin(Date.now()*0.015)*0.2;
+  } else {
+    robot.mouthOpen += (0.05 - robot.mouthOpen) * 0.1;
+  }
+
+  // Draw glow rings
+  ctx.save();
+  ctx.translate(cx, cy + floatY);
+
+  // Outer rotating ring
+  ctx.save();
+  ctx.rotate(robot.ringRotation);
+  ctx.strokeStyle = `rgba(0,240,255,${0.15*robot.glowIntensity})`;
+  ctx.lineWidth = 1;
+  ctx.setLineDash([12, 6]);
+  ctx.beginPath();
+  ctx.arc(0, 0, 135, 0, Math.PI*2);
+  ctx.stroke();
+  ctx.restore();
+
+  // Inner counter-rotating ring
+  ctx.save();
+  ctx.rotate(-robot.ringRotation*0.7);
+  ctx.strokeStyle = `rgba(211,0,249,${0.1*robot.glowIntensity})`;
+  ctx.lineWidth = 0.5;
+  ctx.setLineDash([6, 10]);
+  ctx.beginPath();
+  ctx.arc(0, 0, 125, 0, Math.PI*2);
+  ctx.stroke();
+  ctx.restore();
+
+  // Head shape (3D-ish ellipse)
+  const headW = 110, headH = 95;
+
+  // Head glow
+  const headGrad = ctx.createRadialGradient(0, -10, 10, 0, 0, headW);
+  headGrad.addColorStop(0, `rgba(0,240,255,${0.08*robot.glowIntensity})`);
+  headGrad.addColorStop(1, 'rgba(0,240,255,0)');
+  ctx.fillStyle = headGrad;
+  ctx.beginPath();
+  ctx.ellipse(0, 0, headW+20, headH+20, 0, 0, Math.PI*2);
+  ctx.fill();
+
+  // Head body
+  const bodyGrad = ctx.createLinearGradient(-headW, -headH, headW, headH);
+  bodyGrad.addColorStop(0, '#0a1628');
+  bodyGrad.addColorStop(0.5, '#0d1f3c');
+  bodyGrad.addColorStop(1, '#0a1628');
+  ctx.fillStyle = bodyGrad;
+  ctx.strokeStyle = `rgba(0,240,255,${0.4 + Math.sin(robot.glowPhase)*0.1})`;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.ellipse(0, 0, headW, headH, 0, 0, Math.PI*2);
+  ctx.fill();
+  ctx.stroke();
+
+  // Head highlight (3D effect)
+  ctx.fillStyle = 'rgba(0,240,255,0.03)';
+  ctx.beginPath();
+  ctx.ellipse(-20, -30, 50, 35, -0.3, 0, Math.PI*2);
+  ctx.fill();
+
+  // Antenna
+  ctx.strokeStyle = `rgba(0,240,255,${0.5*robot.glowIntensity})`;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(0, -headH);
+  ctx.lineTo(0, -headH-18);
+  ctx.stroke();
+
+  // Antenna ball
+  const ballPulse = 0.7 + Math.sin(robot.glowPhase*2)*0.3;
+  ctx.fillStyle = `rgba(0,240,255,${ballPulse})`;
+  ctx.shadowColor = '#00f0ff';
+  ctx.shadowBlur = 12;
+  ctx.beginPath();
+  ctx.arc(0, -headH-22, 5, 0, Math.PI*2);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // Forehead LED bar
+  ctx.fillStyle = `rgba(0,240,255,${0.25 + Math.sin(robot.glowPhase*3)*0.15})`;
+  ctx.shadowColor = '#00f0ff';
+  ctx.shadowBlur = 8;
+  ctx.fillRect(-22, -headH+18, 44, 5);
+  ctx.shadowBlur = 0;
+
+  // Eyes
+  const eyeY = -8;
+  const eyeLX = -42, eyeRX = 42;
+  const eyeWR = 26, eyeHR = 20;
+
+  // Eye sockets (glow)
+  [eyeLX, eyeRX].forEach((ex, i) => {
+    const eg = ctx.createRadialGradient(ex, eyeY, 5, ex, eyeY, eyeWR+8);
+    eg.addColorStop(0, `rgba(0,240,255,${0.1*robot.glowIntensity})`);
+    eg.addColorStop(1, 'rgba(0,240,255,0)');
+    ctx.fillStyle = eg;
+    ctx.beginPath();
+    ctx.ellipse(ex, eyeY, eyeWR+8, eyeHR+8, 0, 0, Math.PI*2);
+    ctx.fill();
+  });
+
+  // Left Eye
+  drawEye(eyeLX, eyeY, eyeWR, eyeHR, robot.eyeLX, robot.eyeLY, blinkScale);
+  // Right Eye
+  drawEye(eyeRX, eyeY, eyeWR, eyeHR, robot.eyeRX, robot.eyeRY, blinkScale);
+
+  // Mouth
+  const mouthY = 35;
+  ctx.strokeStyle = `rgba(0,240,255,${0.6*robot.glowIntensity})`;
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = 'round';
+  ctx.shadowColor = '#00f0ff';
+  ctx.shadowBlur = 6;
+  ctx.beginPath();
+  ctx.moveTo(-25, mouthY);
+  ctx.quadraticCurveTo(0, mouthY + robot.mouthOpen*25, 25, mouthY);
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  // Cheeks
+  const cheekPulse = 0.3 + Math.sin(robot.glowPhase*1.5)*0.2;
+  ctx.fillStyle = `rgba(255,42,109,${cheekPulse})`;
+  ctx.shadowColor = '#ff2a6d';
+  ctx.shadowBlur = 6;
+  ctx.beginPath(); ctx.arc(-75, 15, 3, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(75, 15, 3, 0, Math.PI*2); ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // Jaw line (3D depth)
+  ctx.strokeStyle = `rgba(0,240,255,${0.08*robot.glowIntensity})`;
+  ctx.lineWidth = 0.5;
+  ctx.beginPath();
+  ctx.ellipse(0, 8, headW-5, headH-5, 0, 0.2, Math.PI-0.2);
+  ctx.stroke();
+
+  ctx.restore();
+
+  // Floating particles around robot
+  robot.particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if(p.x < 0) p.x = W; if(p.x > W) p.x = 0;
+    if(p.y < 0) p.y = H; if(p.y > H) p.y = 0;
+
+    const distToCenter = Math.hypot(p.x-cx, p.y-(cy+floatY));
+    if(distToCenter < 140) {
+      const angle = Math.atan2(p.y-(cy+floatY), p.x-cx);
+      p.vx += Math.cos(angle)*0.02;
+      p.vy += Math.sin(angle)*0.02;
+    }
+
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = p.alpha * robot.glowIntensity;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+    ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+
+  requestAnimationFrame(drawRobot);
+}
+
+function drawEye(x, y, w, h, pupilX, pupilY, blink) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(1, blink);
+
+  // Eye outline
+  ctx.strokeStyle = 'rgba(0,240,255,0.5)';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.ellipse(0, 0, w, h, 0, 0, Math.PI*2);
+  ctx.stroke();
+
+  // Eye fill (dark)
+  ctx.fillStyle = '#000';
+  ctx.beginPath();
+  ctx.ellipse(0, 0, w-2, h-2, 0, 0, Math.PI*2);
+  ctx.fill();
+
+  // Iris gradient
+  const irisGrad = ctx.createRadialGradient(pupilX, pupilY, 2, pupilX, pupilY, w-6);
+  irisGrad.addColorStop(0, '#00f0ff');
+  irisGrad.addColorStop(0.6, '#2979ff');
+  irisGrad.addColorStop(1, 'rgba(41,121,255,0.2)');
+  ctx.fillStyle = irisGrad;
+  ctx.beginPath();
+  ctx.ellipse(pupilX, pupilY, w-6, h-5, 0, 0, Math.PI*2);
+  ctx.fill();
+
+  // Pupil
+  ctx.fillStyle = '#fff';
+  ctx.shadowColor = '#00f0ff';
+  ctx.shadowBlur = 8;
+  ctx.beginPath();
+  ctx.arc(pupilX, pupilY, 7, 0, Math.PI*2);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // Pupil center
+  ctx.fillStyle = '#000';
+  ctx.beginPath();
+  ctx.arc(pupilX, pupilY, 3, 0, Math.PI*2);
+  ctx.fill();
+
+  // Eye shine
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.beginPath();
+  ctx.arc(pupilX-4, pupilY-4, 2.5, 0, Math.PI*2);
+  ctx.fill();
+
+  ctx.restore();
+}
+
+drawRobot();
+
+// ============================================================
+// PARTICLE FIELD (Background)
+// ============================================================
+const pField = document.getElementById('particleField');
+for(let i=0; i<25; i++) {
+  const p = document.createElement('div');
+  p.style.cssText = `
+    position:absolute; border-radius:50%; pointer-events:none;
+    width:${Math.random()*3+1}px; height:${Math.random()*3+1}px;
+    left:${Math.random()*100}%; top:${Math.random()*100}%;
+    background:${['#00f0ff','#ff2a6d','#d300f9','#2979ff'][Math.floor(Math.random()*4)]};
+    box-shadow:0 0 ${Math.random()*6+2}px currentColor;
+    opacity:${Math.random()*0.4+0.1};
+    animation: pFloat ${Math.random()*12+8}s linear infinite;
+    animation-delay:${Math.random()*5}s;
+  `;
+  pField.appendChild(p);
+}
+
+// ============================================================
+// CHAT SYSTEM
+// ============================================================
+const API_URL = (window.location.origin || 'http://100.100.223.255:5002') + '/api/chat';
+const WS_URL = (window.location.origin || 'http://100.100.223.255:5002').replace('http','ws') + '/ws';
+let isTyping = false;
+let lastBotMsg = '';
+
+function getTime() {
+  const now = new Date();
+  return now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+}
+
+function addMessage(text, isUser) {
+  const container = document.getElementById('chatMessages');
+  const msg = document.createElement('div');
+  msg.className = 'msg ' + (isUser ? 'msg-user' : 'msg-bot');
+  msg.innerHTML = text.replace(/\n/g,'<br>') + '<span class="msg-time">' + getTime() + '</span>';
+  container.appendChild(msg);
+  container.scrollTop = container.scrollHeight;
+  if(!isUser) lastBotMsg = text;
+}
+
+function showTyping() {
+  const container = document.getElementById('chatMessages');
+  const t = document.createElement('div');
+  t.className = 'typing-indicator'; t.id = 'typingInd';
+  t.innerHTML = '<span></span><span></span><span></span>';
+  container.appendChild(t);
+  container.scrollTop = container.scrollHeight;
+  robot.talking = true;
+}
+
+function hideTyping() {
+  const el = document.getElementById('typingInd');
+  if(el) el.remove();
+  robot.talking = false;
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if(!text || isTyping) return;
+
+  addMessage(text, true);
+  input.value = '';
+  isTyping = true;
+  showTyping();
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({message: text, session_id: 'user_001'})
+    });
+    const data = await res.json();
+    hideTyping();
+
+    if(data.reply) {
+      addMessage(data.reply, false);
+      speakText(data.reply);
+    }
+    if(data.q_points) updateQPoints(data.q_points);
+    if(data.emotion) updateEmotion(data.emotion);
+    if(data.hud) updateHUD(data.hud);
+  } catch(err) {
+    hideTyping();
+    addMessage('⚠️ انقطع الاتصال بالنظام الكمومي... جاري إعادة المحاولة', false);
+  }
+  isTyping = false;
+}
+
+function updateQPoints(val) {
+  document.getElementById('qValue').textContent = 'Q-' + val;
+}
+
+function updateEmotion(emo) {
+  robot.emotion = emo;
+  const names = {happy:'سعيد', sad:'حزين', excited:'متحمس', curious:'فضولي', neutral:'محايد', loving:'محب'};
+  document.getElementById('emotionVal').textContent = names[emo] || emo;
+  const bars = {happy:80, sad:20, excited:95, curious:70, neutral:50, loving:85};
+  document.getElementById('emotionBar').style.width = (bars[emo]||50) + '%';
+}
+
+function updateHUD(hud) {
+  if(hud.memory) { document.getElementById('memUsage').textContent = hud.memory + '%'; }
+  if(hud.cpu) { document.getElementById('cpuVal').textContent = hud.cpu + '%'; }
+  if(hud.gpu) { document.getElementById('gpuVal').textContent = hud.gpu + '%'; }
+  if(hud.network) { document.getElementById('netVal').textContent = hud.network + 'ms'; }
+  if(hud.learning) { document.getElementById('learnRate').textContent = (hud.learning>0?'+':'') + hud.learning + '%'; }
+}
+
+function clearChat() {
+  document.getElementById('chatMessages').innerHTML = '';
+}
+
+function speakLast() {
+  if(lastBotMsg) speakText(lastBotMsg);
+}
+
+function exportChat() {
+  const msgs = document.querySelectorAll('.msg');
+  let text = '=== مروق الكمومي v4.0 — سجل المحادثة ===\n\n';
+  msgs.forEach(m => text += m.textContent + '\n\n');
+  const blob = new Blob([text], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'maroq_chat_' + Date.now() + '.txt';
+  a.click();
+}
+
+// ============================================================
+// VOICE — Text to Speech + Speech Recognition
+// ============================================================
+let recognition = null;
+if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SR();
+  recognition.lang = 'ar-SA';
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  recognition.onresult = (e) => {
+    document.getElementById('chatInput').value = e.results[0][0].transcript;
+    sendMessage();
+    stopRecording();
+  };
+  recognition.onerror = () => stopRecording();
+  recognition.onend = () => stopRecording();
+}
+
+function toggleMic() {
+  const btn = document.getElementById('micBtn');
+  const wave = document.getElementById('voiceWave');
+  if(!recognition) {
+    alert('المتصفح لا يدعم التعرف على الصوت');
+    return;
+  }
+  if(btn.classList.contains('recording')) {
+    recognition.stop();
+    stopRecording();
+  } else {
+    btn.classList.add('recording');
+    wave.classList.add('active');
+    recognition.start();
+  }
+}
+
+function stopRecording() {
+  document.getElementById('micBtn').classList.remove('recording');
+  document.getElementById('voiceWave').classList.remove('active');
+}
+
+function speakText(text) {
+  if(!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text.replace(/[🔮✨⚡🌙💙❤️💖🚀🧠🔍🤔😊😢🤩🥰💪👂🌟]/g,''));
+  u.lang = 'ar-SA';
+  u.rate = 0.95;
+  u.pitch = 1.05;
+  u.onstart = () => { robot.talking = true; };
+  u.onend = () => { robot.talking = false; };
+  window.speechSynthesis.speak(u);
+}
+
+// ============================================================
+// WEBSOCKET (Real-time)
+// ============================================================
+let ws = null;
+function connectWS() {
+  try {
+    ws = new WebSocket(WS_URL);
+    ws.onopen = () => {
+      document.getElementById('connectionStatus').textContent = 'متصل بالنظام الكمومي';
+      document.querySelector('.status-dot').style.background = '#00f0ff';
+    };
+    ws.onclose = () => {
+      document.getElementById('connectionStatus').textContent = 'إعادة الاتصال...';
+      document.querySelector('.status-dot').style.background = '#ff2a6d';
+      setTimeout(connectWS, 3000);
+    };
+    ws.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+      if(data.type === 'status') updateHUD(data.hud);
+      if(data.type === 'emotion') updateEmotion(data.emotion);
+    };
+  } catch(e) {}
+}
+connectWS();
+
+// ============================================================
+// EMOTION WAVE ANIMATION
+// ============================================================
+let wavePhase = 0;
+function animateWave() {
+  wavePhase += 0.05;
+  const wave = document.getElementById('emotionWave');
+  let text = '';
+  for(let i=0; i<12; i++) {
+    const intensity = Math.sin(wavePhase + i*0.5) * 0.5 + 0.5;
+    const chars = ['○','◐','●'];
+    text += chars[Math.floor(intensity*2.99)] + ' ';
+  }
+  wave.textContent = text;
+  requestAnimationFrame(animateWave);
+}
+animateWave();
+
+// ============================================================
+// PWA
+// ============================================================
+if('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(()=>{});
+}
+
+// Initial greeting
+setTimeout(() => {
+  addMessage('مرحباً! أنا مروق الكمومي 🔮\nابن النظام الروبوتي المتكامل.\nعيناي تتبعانك، ودماغي يتعلم معك.\nكيف يمكنني مساعدتك؟', false);
+}, 500);
+</script>
+</body>
+</html>

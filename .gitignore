@@ -1,0 +1,7 @@
+.env
+.env.backup
+.env.*
+cosmic_memory.json
+__pycache__/
+*.pyc
+*.pyo

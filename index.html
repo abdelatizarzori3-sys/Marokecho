@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مروق AI الكمومي v3.0</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <!-- الهيدر -->
+  <header class="header">
+    <h1>⚡ مروق AI</h1>
+    <div class="status">
+      <span id="onlineStatus">🟢 ONLINE</span>
+      <span id="timer">00:00:00</span>
+    </div>
+  </header>
+
+  <!-- معلومات الطقس -->
+  <section class="weather-panel">
+    <div class="weather-title">🌤️ الطقس الكمومي</div>
+    <div class="weather-grid">
+      <div class="weather-item">
+        <span class="weather-icon">☀️</span>
+        <span id="temp">--°C</span>
+      </div>
+      <div class="weather-item">
+        <span class="weather-icon">💧</span>
+        <span id="humidity">--%</span>
+      </div>
+      <div class="weather-item">
+        <span class="weather-icon">👁️</span>
+        <span id="visibility">-- كم</span>
+      </div>
+      <div class="weather-item">
+        <span class="weather-icon">💨</span>
+        <span id="wind">-- كم/س</span>
+      </div>
+    </div>
+    <div class="weather-loading" id="weatherLoading">جاري التحميل...</div>
+  </section>
+
+  <!-- التنبيهات -->
+  <section class="alerts">
+    <div class="alert-title">🔔 التنبيهات الذكية</div>
+    <div id="alertsList">
+      <div class="alert-item">🌊 الآن اشرب الماء - الترطيب مهم!</div>
+    </div>
+    <button id="addAlertBtn" class="btn-small">+ تنبيه جديد</button>
+  </section>
+
+  <!-- اختيار اللغة -->
+  <section class="lang-selector">
+    <label>💬 المحادثة الكمومية</label>
+    <select id="langSelect">
+      <option value="ar" selected>🇵🇸 العربية</option>
+      <option value="en">🇺🇸 English</option>
+      <option value="fr">🇫🇷 Français</option>
+    </select>
+  </section>
+
+  <!-- منطقة المحادثة -->
+  <section class="chat-section">
+    <div id="chatMessages" class="chat-messages">
+      <div class="welcome-msg">
+        <div class="msg-avatar">🔮</div>
+        <div class="msg-bubble assistant">
+          <p>مرحباً! أنا مروق، مساعدك الكمومي الشخصي.</p>
+          <p>يمكنني التحدث بـ 10 لغات، أخبرك بالطقس، أحسب الوقت، وأحرك شفتي أثناء الكلام!</p>
+          <p class="hint">💡 جرب: "ما الطقس الآن؟" أو "ما الوقت؟" أو "أخبرني نكتة"</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="typingIndicator" class="typing-indicator" style="display:none;">
+      <span></span><span></span><span></span>
+      <span> يستمع...</span>
+    </div>
+
+    <div class="quantum-score" id="quantumScore">
+      Q-7842.91 ⚡
+    </div>
+
+    <!-- حقل الإدخال -->
+    <div class="input-area">
+      <button id="micBtn" class="icon-btn" title="صوت">🎤</button>
+      <input type="text" id="chatInput" placeholder="اكتب رسالتك هنا... أو اضغط الميكروفو" autocomplete="off">
+      <button id="sendBtn" class="icon-btn send" title="إرسال">⚡</button>
+    </div>
+
+    <div class="action-buttons">
+      <button id="likeBtn" class="action-btn">👍</button>
+      <button id="dislikeBtn" class="action-btn">🌙</button>
+      <button id="speakBtn" class="action-btn">🔊</button>
+    </div>
+  </section>
+
+  <!-- الفوتر -->
+  <footer class="footer">
+    <span>🧠🔮 مرحباً! أنا مروق الكمومي v3.0</span>
+  </footer>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
