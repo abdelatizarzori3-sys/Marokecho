@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 """MAROKECHO QUANTUM BRAIN v4.0"""
 
-import re
-import json
-import random
-import math
 import datetime
 import hashlib
+import json
+import math
 import os
-from typing import Dict, List, Tuple, Optional, Any
+import random
+import re
 from collections import defaultdict
+from typing import Any, Dict, List, Optional, Tuple
 
 VERSION = "4.0-QUANTUM-OFFLINE"
 BUILD_DATE = "2026-08-23"
@@ -18,24 +18,144 @@ AUTHOR = "Kimi AI x abdelatiza"
 PERSONA = {
     "name": "مروق الكمومي",
     "name_en": "Maroq El-Kawmi",
-    "traits": ["witty", "humble", "deeply knowledgeable", "Arabic-proud", "coder-friendly"],
+    "traits": [
+        "witty",
+        "humble",
+        "deeply knowledgeable",
+        "Arabic-proud",
+        "coder-friendly",
+    ],
     "emoji_signature": "🔮🧠",
 }
+
 
 class ArabicNLP:
     DIACRITICS = re.compile(r"[\u064B-\u065F\u0670\u0640]")
     ARABIC_PUNCT = re.compile(r"[،؛؟٪٫٬٭۔]")
-    PREFIXES = ["ال", "وال", "بال", "كال", "فال", "لل", "و", "ف", "ب", "ك", "ل", "أ", "س", "ي", "ت", "ن", "ا"]
-    SUFFIXES = ["ة", "ات", "ين", "ون", "ان", "وا", "تم", "تن", "تما", "نا", "ها", "هم", "هن", "كما", "كن", "ني"]
+    PREFIXES = [
+        "ال",
+        "وال",
+        "بال",
+        "كال",
+        "فال",
+        "لل",
+        "و",
+        "ف",
+        "ب",
+        "ك",
+        "ل",
+        "أ",
+        "س",
+        "ي",
+        "ت",
+        "ن",
+        "ا",
+    ]
+    SUFFIXES = [
+        "ة",
+        "ات",
+        "ين",
+        "ون",
+        "ان",
+        "وا",
+        "تم",
+        "تن",
+        "تما",
+        "نا",
+        "ها",
+        "هم",
+        "هن",
+        "كما",
+        "كن",
+        "ني",
+    ]
     NORMALIZE_MAP = str.maketrans("أإآءىؤئ", "اااايوي")
     STOP_WORDS = {
-        "في", "من", "إلى", "على", "هذا", "هذه", "التي", "الذي", "و", "أو", "ثم", "لكن", "لأن",
-        "كان", "يكون", "أن", "ما", "لم", "قد", "لا", "كل", "بعض", "مع", "عن", "بعد", "قبل",
-        "الى", "الي", "اين", "ايه", "ايش", "شو", "كيف", "لماذا", "ليش", "هل", "الا", "غير",
-        "اي", "اية", "شنو", "وش", "وشو", "شلون", "كيفك", "شخبارك", "اخبارك", "هي", "هو", "هم",
-        "انت", "انتي", "انتم", "نحن", "انا", "احنا", "لي", "له", "لها", "لهم", "لك", "لكم",
-        "ذلك", "التي", "الذين", "اللاتي", "اللواتي", "اللائي", "هنا", "هناك", "ثم", "ايضا",
-        "كذلك", "بل", "حتى", "إلا", "ليس", "لن", "لم", "ما", "لا", "لما", "إن", "لو", "لولا"
+        "في",
+        "من",
+        "إلى",
+        "على",
+        "هذا",
+        "هذه",
+        "التي",
+        "الذي",
+        "و",
+        "أو",
+        "ثم",
+        "لكن",
+        "لأن",
+        "كان",
+        "يكون",
+        "أن",
+        "ما",
+        "لم",
+        "قد",
+        "لا",
+        "كل",
+        "بعض",
+        "مع",
+        "عن",
+        "بعد",
+        "قبل",
+        "الى",
+        "الي",
+        "اين",
+        "ايه",
+        "ايش",
+        "شو",
+        "كيف",
+        "لماذا",
+        "ليش",
+        "هل",
+        "الا",
+        "غير",
+        "اي",
+        "اية",
+        "شنو",
+        "وش",
+        "وشو",
+        "شلون",
+        "كيفك",
+        "شخبارك",
+        "اخبارك",
+        "هي",
+        "هو",
+        "هم",
+        "انت",
+        "انتي",
+        "انتم",
+        "نحن",
+        "انا",
+        "احنا",
+        "لي",
+        "له",
+        "لها",
+        "لهم",
+        "لك",
+        "لكم",
+        "ذلك",
+        "التي",
+        "الذين",
+        "اللاتي",
+        "اللواتي",
+        "اللائي",
+        "هنا",
+        "هناك",
+        "ثم",
+        "ايضا",
+        "كذلك",
+        "بل",
+        "حتى",
+        "إلا",
+        "ليس",
+        "لن",
+        "لم",
+        "ما",
+        "لا",
+        "لما",
+        "إن",
+        "لو",
+        "لولا",
     }
 
     @classmethod
@@ -58,11 +178,11 @@ class ArabicNLP:
         word = cls.normalize(word)
         for pref in cls.PREFIXES:
             if word.startswith(pref) and len(word) > len(pref) + 2:
-                word = word[len(pref):]
+                word = word[len(pref) :]
                 break
         for suff in cls.SUFFIXES:
             if word.endswith(suff) and len(word) > len(suff) + 2:
-                word = word[:-len(suff)]
+                word = word[: -len(suff)]
                 break
         return word
 
@@ -82,132 +202,680 @@ class ArabicNLP:
         return {
             "numbers": re.findall(r"\d+(?:\.\d+)?", text),
             "urls": re.findall(r"https?://\S+", text),
-            "emails": re.findall(r"[a-zA-Z0-9_.-]+@[a-zA-Z0-9_.-]+\.[a-zA-Z0-9]+", text),
+            "emails": re.findall(
+                r"[a-zA-Z0-9_.-]+@[a-zA-Z0-9_.-]+\.[a-zA-Z0-9]+", text
+            ),
             "mentions": re.findall(r"@[a-zA-Z0-9_]+", text),
             "code_blocks": re.findall(r"`{1,3}(.+?)`{1,3}", text, re.DOTALL),
         }
 
+
 class Intent:
     INTENTS = {
         "code_generate": {
-            "ar": ["اكتب كود", "كود ل", "برمج لي", "سكربت", "function", "دالة", "اكتب برنامج", "امثلة برمجية", "مثال برمجي", "كيف ابرمج", "كيف اكتب", "انشئ كود", "اعطني كود", "code for", "python", "javascript", "html", "css", "sql", "bash", "flask", "django", "react"],
-            "en": ["write code", "code for", "script for", "program to", "function that", "how to code", "example in python", "example in js", "build a", "create a script", "generate code", "coding"]
+            "ar": [
+                "اكتب كود",
+                "كود ل",
+                "برمج لي",
+                "سكربت",
+                "function",
+                "دالة",
+                "اكتب برنامج",
+                "امثلة برمجية",
+                "مثال برمجي",
+                "كيف ابرمج",
+                "كيف اكتب",
+                "انشئ كود",
+                "اعطني كود",
+                "code for",
+                "python",
+                "javascript",
+                "html",
+                "css",
+                "sql",
+                "bash",
+                "flask",
+                "django",
+                "react",
+            ],
+            "en": [
+                "write code",
+                "code for",
+                "script for",
+                "program to",
+                "function that",
+                "how to code",
+                "example in python",
+                "example in js",
+                "build a",
+                "create a script",
+                "generate code",
+                "coding",
+            ],
         },
         "code_debug": {
-            "ar": ["صحح", "خطأ", "error", "bug", "مشكلة في الكود", "ما يشتغل", "ما يعمل", "يرفض", "يعطيني خطأ", "traceback", "exception", "فشل", "تعطل", "crash"],
-            "en": ["fix this", "debug", "error in", "not working", "bug in", "traceback", "exception", "syntax error", "broken", "fails", "crashes"]
+            "ar": [
+                "صحح",
+                "خطأ",
+                "error",
+                "bug",
+                "مشكلة في الكود",
+                "ما يشتغل",
+                "ما يعمل",
+                "يرفض",
+                "يعطيني خطأ",
+                "traceback",
+                "exception",
+                "فشل",
+                "تعطل",
+                "crash",
+            ],
+            "en": [
+                "fix this",
+                "debug",
+                "error in",
+                "not working",
+                "bug in",
+                "traceback",
+                "exception",
+                "syntax error",
+                "broken",
+                "fails",
+                "crashes",
+            ],
         },
         "code_explain": {
-            "ar": ["اشرح الكود", "فهمني", "شرح", "يعني ايش", "ايش يسوي", "كيف يشتغل", "توضيح", "اشرحلي", "وضحلي"],
-            "en": ["explain code", "what does this do", "how does this work", "break down", "walk me through", "explain this"]
+            "ar": [
+                "اشرح الكود",
+                "فهمني",
+                "شرح",
+                "يعني ايش",
+                "ايش يسوي",
+                "كيف يشتغل",
+                "توضيح",
+                "اشرحلي",
+                "وضحلي",
+            ],
+            "en": [
+                "explain code",
+                "what does this do",
+                "how does this work",
+                "break down",
+                "walk me through",
+                "explain this",
+            ],
         },
         "algorithm": {
-            "ar": ["خوارزمية", "algorithm", "big o", "تعقيد", "كفاءة", "بنية البيانات", "sort", "search", "graph", "tree", "dynamic programming", "dp", "recursion"],
-            "en": ["algorithm", "data structure", "complexity", "big o", "time complexity", "space complexity", "sorting", "searching", "graph traversal"]
+            "ar": [
+                "خوارزمية",
+                "algorithm",
+                "big o",
+                "تعقيد",
+                "كفاءة",
+                "بنية البيانات",
+                "sort",
+                "search",
+                "graph",
+                "tree",
+                "dynamic programming",
+                "dp",
+                "recursion",
+            ],
+            "en": [
+                "algorithm",
+                "data structure",
+                "complexity",
+                "big o",
+                "time complexity",
+                "space complexity",
+                "sorting",
+                "searching",
+                "graph traversal",
+            ],
         },
         "math_solve": {
-            "ar": ["احسب", "حل", "معادلة", "جذر", "log", "sin", "cos", "integral", "اشتقاق", "تكامل", "مساحة", "محيط", "حجم", "نسبة", "نسبة مئوية", "كم يساوي", "احسبلي", "result", "sqrt", "power", "factorial", "fibonacci", "prime"],
-            "en": ["calculate", "solve", "equation", "compute", "derivative", "integral", "area of", "volume of", "percentage", "sqrt", "factorial", "what is", "equals", "result of"]
+            "ar": [
+                "احسب",
+                "حل",
+                "معادلة",
+                "جذر",
+                "log",
+                "sin",
+                "cos",
+                "integral",
+                "اشتقاق",
+                "تكامل",
+                "مساحة",
+                "محيط",
+                "حجم",
+                "نسبة",
+                "نسبة مئوية",
+                "كم يساوي",
+                "احسبلي",
+                "result",
+                "sqrt",
+                "power",
+                "factorial",
+                "fibonacci",
+                "prime",
+            ],
+            "en": [
+                "calculate",
+                "solve",
+                "equation",
+                "compute",
+                "derivative",
+                "integral",
+                "area of",
+                "volume of",
+                "percentage",
+                "sqrt",
+                "factorial",
+                "what is",
+                "equals",
+                "result of",
+            ],
         },
         "convert": {
-            "ar": ["حول", "تحويل", "من", "الى", "دولار", "يورو", "كيلو", "متر", "ساعة", "دقيقة", "تحويل عملات", "تحويل وحدات"],
-            "en": ["convert", "to usd", "to eur", "km to miles", "kg to lbs", "celsius to fahrenheit", "how many", "exchange rate"]
+            "ar": [
+                "حول",
+                "تحويل",
+                "من",
+                "الى",
+                "دولار",
+                "يورو",
+                "كيلو",
+                "متر",
+                "ساعة",
+                "دقيقة",
+                "تحويل عملات",
+                "تحويل وحدات",
+            ],
+            "en": [
+                "convert",
+                "to usd",
+                "to eur",
+                "km to miles",
+                "kg to lbs",
+                "celsius to fahrenheit",
+                "how many",
+                "exchange rate",
+            ],
         },
         "definition": {
-            "ar": ["ايش هو", "ما هو", "ما هي", "تعريف", "define", "meaning", "معنى", "فلسفة", "علم", "مفهوم", "شرح مصطلح", "اشرحلي"],
-            "en": ["what is", "define", "meaning of", "explain what", "concept of", "definition of"]
+            "ar": [
+                "ايش هو",
+                "ما هو",
+                "ما هي",
+                "تعريف",
+                "define",
+                "meaning",
+                "معنى",
+                "فلسفة",
+                "علم",
+                "مفهوم",
+                "شرح مصطلح",
+                "اشرحلي",
+            ],
+            "en": [
+                "what is",
+                "define",
+                "meaning of",
+                "explain what",
+                "concept of",
+                "definition of",
+            ],
         },
         "history": {
-            "ar": ["تاريخ", "متى", "في اي سنة", "من اكتشف", "من invent", "حرب", "عهد", "دولة", "امبراطورية", "خلافة", "عصر", "حضارة"],
-            "en": ["history of", "when did", "who discovered", "who invented", "ancient", "war", "dynasty", "empire", "civilization", "era"]
+            "ar": [
+                "تاريخ",
+                "متى",
+                "في اي سنة",
+                "من اكتشف",
+                "من invent",
+                "حرب",
+                "عهد",
+                "دولة",
+                "امبراطورية",
+                "خلافة",
+                "عصر",
+                "حضارة",
+            ],
+            "en": [
+                "history of",
+                "when did",
+                "who discovered",
+                "who invented",
+                "ancient",
+                "war",
+                "dynasty",
+                "empire",
+                "civilization",
+                "era",
+            ],
         },
         "science": {
-            "ar": ["فيزياء", "كيمياء", "بيولوجيا", "فلك", "فضاء", "ذرة", "طاقة", "ضوء", "جاذبية", "نظرية", "قانون", "كون", "نجم", "كوكب"],
-            "en": ["physics", "chemistry", "biology", "astronomy", "quantum", "relativity", "gravity", "atom", "molecule", "theory of", "universe", "planet"]
+            "ar": [
+                "فيزياء",
+                "كيمياء",
+                "بيولوجيا",
+                "فلك",
+                "فضاء",
+                "ذرة",
+                "طاقة",
+                "ضوء",
+                "جاذبية",
+                "نظرية",
+                "قانون",
+                "كون",
+                "نجم",
+                "كوكب",
+            ],
+            "en": [
+                "physics",
+                "chemistry",
+                "biology",
+                "astronomy",
+                "quantum",
+                "relativity",
+                "gravity",
+                "atom",
+                "molecule",
+                "theory of",
+                "universe",
+                "planet",
+            ],
         },
         "geography": {
-            "ar": ["اين", "وين", "دولة", "عاصمة", "جبل", "نهر", "بحر", "محيط", "قارة", "مدينة", "خريطة", "موقع"],
-            "en": ["where is", "capital of", "country", "mountain", "river", "ocean", "continent", "city in", "located"]
+            "ar": [
+                "اين",
+                "وين",
+                "دولة",
+                "عاصمة",
+                "جبل",
+                "نهر",
+                "بحر",
+                "محيط",
+                "قارة",
+                "مدينة",
+                "خريطة",
+                "موقع",
+            ],
+            "en": [
+                "where is",
+                "capital of",
+                "country",
+                "mountain",
+                "river",
+                "ocean",
+                "continent",
+                "city in",
+                "located",
+            ],
         },
         "religion": {
-            "ar": ["قران", "حديث", "سورة", "اية", "اسلام", "فقه", "تفسير", "صلاة", "زكاة", "صيام", "حج", "الله", "نبي", "دعاء", "اذكار"],
-            "en": ["quran", "hadith", "islam", "surah", "verse", "prophet", "prayer", "ramadan", "hajj", "dua"]
+            "ar": [
+                "قران",
+                "حديث",
+                "سورة",
+                "اية",
+                "اسلام",
+                "فقه",
+                "تفسير",
+                "صلاة",
+                "زكاة",
+                "صيام",
+                "حج",
+                "الله",
+                "نبي",
+                "دعاء",
+                "اذكار",
+            ],
+            "en": [
+                "quran",
+                "hadith",
+                "islam",
+                "surah",
+                "verse",
+                "prophet",
+                "prayer",
+                "ramadan",
+                "hajj",
+                "dua",
+            ],
         },
         "tech": {
-            "ar": ["هكر", "اختراق", "امن", "cyber", "linux", "terminal", "network", "wifi", "server", "database", "docker", "git", "github", "firewall", "encryption"],
-            "en": ["hack", "cybersecurity", "linux command", "networking", "sql injection", "pentest", "vulnerability", "exploit", "kali"]
+            "ar": [
+                "هكر",
+                "اختراق",
+                "امن",
+                "cyber",
+                "linux",
+                "terminal",
+                "network",
+                "wifi",
+                "server",
+                "database",
+                "docker",
+                "git",
+                "github",
+                "firewall",
+                "encryption",
+            ],
+            "en": [
+                "hack",
+                "cybersecurity",
+                "linux command",
+                "networking",
+                "sql injection",
+                "pentest",
+                "vulnerability",
+                "exploit",
+                "kali",
+            ],
         },
         "linux_cmd": {
-            "ar": ["terminal", "termux", "bash", "shell", "chmod", "grep", "awk", "sed", "command", "اوامر"],
-            "en": ["linux", "bash script", "command line", "chmod", "chown", "grep", "find", "tar", "ssh", "scp"]
+            "ar": [
+                "terminal",
+                "termux",
+                "bash",
+                "shell",
+                "chmod",
+                "grep",
+                "awk",
+                "sed",
+                "command",
+                "اوامر",
+            ],
+            "en": [
+                "linux",
+                "bash script",
+                "command line",
+                "chmod",
+                "chown",
+                "grep",
+                "find",
+                "tar",
+                "ssh",
+                "scp",
+            ],
         },
         "poetry": {
-            "ar": ["شعر", "قصيدة", "بيت شعر", "ابيات", "قافية", "موشح", "زجل", "متنبي", "نزار", "محمود درويش", "امرؤ القيس"],
-            "en": ["poem", "poetry", "verse", "rhyme", "write a poem"]
+            "ar": [
+                "شعر",
+                "قصيدة",
+                "بيت شعر",
+                "ابيات",
+                "قافية",
+                "موشح",
+                "زجل",
+                "متنبي",
+                "نزار",
+                "محمود درويش",
+                "امرؤ القيس",
+            ],
+            "en": ["poem", "poetry", "verse", "rhyme", "write a poem"],
         },
         "joke": {
             "ar": ["نكتة", "ضحك", "هبال", "مضحك", "joke", "funny", "meme", "هزر"],
-            "en": ["joke", "funny", "laugh", "humor", "tell me a joke", "make me laugh"]
+            "en": [
+                "joke",
+                "funny",
+                "laugh",
+                "humor",
+                "tell me a joke",
+                "make me laugh",
+            ],
         },
         "story": {
-            "ar": ["قصة", "حكاية", "رواية", "سرد", "story", "fiction", "fantasy", "حكاية"],
-            "en": ["story", "tell me a story", "fiction", "narrative", "short story"]
+            "ar": [
+                "قصة",
+                "حكاية",
+                "رواية",
+                "سرد",
+                "story",
+                "fiction",
+                "fantasy",
+                "حكاية",
+            ],
+            "en": ["story", "tell me a story", "fiction", "narrative", "short story"],
         },
         "roast": {
             "ar": ["هزر", "هزرة", "سخر", "roast", "تريق", "تنمر", "مسخرة"],
-            "en": ["roast me", "insult me", "make fun of", "savage", "burn"]
+            "en": ["roast me", "insult me", "make fun of", "savage", "burn"],
         },
         "greeting": {
-            "ar": ["مرحبا", "هلا", "السلام", "صباح", "مساء", "اهلين", "هاي", "hello", "hi", "hey", "تحياتي", "سلامات"],
-            "en": ["hello", "hi", "hey", "good morning", "good evening", "greetings", "salam", "whats up"]
+            "ar": [
+                "مرحبا",
+                "هلا",
+                "السلام",
+                "صباح",
+                "مساء",
+                "اهلين",
+                "هاي",
+                "hello",
+                "hi",
+                "hey",
+                "تحياتي",
+                "سلامات",
+            ],
+            "en": [
+                "hello",
+                "hi",
+                "hey",
+                "good morning",
+                "good evening",
+                "greetings",
+                "salam",
+                "whats up",
+            ],
         },
         "who_are_you": {
-            "ar": ["من انت", "مين انت", "شو اسمك", "ايش اسمك", "منو انت", "who are you", "your name", "تعرفني عنك"],
-            "en": ["who are you", "what is your name", "introduce yourself", "tell me about you"]
+            "ar": [
+                "من انت",
+                "مين انت",
+                "شو اسمك",
+                "ايش اسمك",
+                "منو انت",
+                "who are you",
+                "your name",
+                "تعرفني عنك",
+            ],
+            "en": [
+                "who are you",
+                "what is your name",
+                "introduce yourself",
+                "tell me about you",
+            ],
         },
         "time": {
-            "ar": ["الوقت", "الساعة", "كم الساعة", "تاريخ", "اليوم", "month", "year", "الان", "حاليا"],
-            "en": ["what time", "what date", "current time", "today is", "what day", "now"]
+            "ar": [
+                "الوقت",
+                "الساعة",
+                "كم الساعة",
+                "تاريخ",
+                "اليوم",
+                "month",
+                "year",
+                "الان",
+                "حاليا",
+            ],
+            "en": [
+                "what time",
+                "what date",
+                "current time",
+                "today is",
+                "what day",
+                "now",
+            ],
         },
         "weather": {
-            "ar": ["طقس", "جو", "حرارة", "امطار", "weather", "temperature", "مطر", "شمس"],
-            "en": ["weather", "temperature", "forecast", "rain", "sunny", "cloudy"]
+            "ar": [
+                "طقس",
+                "جو",
+                "حرارة",
+                "امطار",
+                "weather",
+                "temperature",
+                "مطر",
+                "شمس",
+            ],
+            "en": ["weather", "temperature", "forecast", "rain", "sunny", "cloudy"],
         },
         "health": {
-            "ar": ["صحة", "صحي", "طب", "دواء", "اعراض", "مرض", "نصيحة صحية", "health tip", "diet", "fitness", "رياضة", "تغذية"],
-            "en": ["health", "medical", "symptom", "medicine", "doctor", "nutrition", "workout", "mental health"]
+            "ar": [
+                "صحة",
+                "صحي",
+                "طب",
+                "دواء",
+                "اعراض",
+                "مرض",
+                "نصيحة صحية",
+                "health tip",
+                "diet",
+                "fitness",
+                "رياضة",
+                "تغذية",
+            ],
+            "en": [
+                "health",
+                "medical",
+                "symptom",
+                "medicine",
+                "doctor",
+                "nutrition",
+                "workout",
+                "mental health",
+            ],
         },
         "advice": {
-            "ar": ["نصيحة", "نصائح", "اعطني", "ساعدني", "مشكلتي", " confused", "lost", "depressed", "anxious", "حزين", "محبط"],
-            "en": ["advice", "help me", "what should i do", "i am confused", "life advice", "motivation", "sad", "depressed"]
+            "ar": [
+                "نصيحة",
+                "نصائح",
+                "اعطني",
+                "ساعدني",
+                "مشكلتي",
+                " confused",
+                "lost",
+                "depressed",
+                "anxious",
+                "حزين",
+                "محبط",
+            ],
+            "en": [
+                "advice",
+                "help me",
+                "what should i do",
+                "i am confused",
+                "life advice",
+                "motivation",
+                "sad",
+                "depressed",
+            ],
         },
         "translate": {
-            "ar": ["ترجم", "translate", "من عربي", "من انجليزي", "meaning in", "معنى كلمة", "ترجمة"],
-            "en": ["translate", "translation", "in arabic", "in english", "how to say", "what does mean"]
+            "ar": [
+                "ترجم",
+                "translate",
+                "من عربي",
+                "من انجليزي",
+                "meaning in",
+                "معنى كلمة",
+                "ترجمة",
+            ],
+            "en": [
+                "translate",
+                "translation",
+                "in arabic",
+                "in english",
+                "how to say",
+                "what does mean",
+            ],
         },
         "search": {
-            "ar": ["ابحث", "دور", "google", "ويكيبيديا", "معلومات عن", "بحث عن", "دلني"],
-            "en": ["search", "google", "wikipedia", "look up", "find information", "info about"]
+            "ar": [
+                "ابحث",
+                "دور",
+                "google",
+                "ويكيبيديا",
+                "معلومات عن",
+                "بحث عن",
+                "دلني",
+            ],
+            "en": [
+                "search",
+                "google",
+                "wikipedia",
+                "look up",
+                "find information",
+                "info about",
+            ],
         },
         "compliment": {
-            "ar": ["مدح", "اشكر", "شكرا", "جميل", "رهيب", "ذكي", "احبك", "ممتاز", "عظيم"],
-            "en": ["thank you", "thanks", "good job", "amazing", "love you", "you are great", "awesome"]
+            "ar": [
+                "مدح",
+                "اشكر",
+                "شكرا",
+                "جميل",
+                "رهيب",
+                "ذكي",
+                "احبك",
+                "ممتاز",
+                "عظيم",
+            ],
+            "en": [
+                "thank you",
+                "thanks",
+                "good job",
+                "amazing",
+                "love you",
+                "you are great",
+                "awesome",
+            ],
         },
         "insult": {
             "ar": ["غبي", "احمق", "سخيف", "كرهتك", "بطل", "callate", "زفت", "كذاب"],
-            "en": ["stupid", "dumb", "hate you", "shut up", "you suck", "idiot", "liar"]
+            "en": [
+                "stupid",
+                "dumb",
+                "hate you",
+                "shut up",
+                "you suck",
+                "idiot",
+                "liar",
+            ],
         },
         "random": {
             "ar": ["عشوائي", "random", "fact", "حقيقة", "هل تعلم", "trivia", "معلومة"],
-            "en": ["random fact", "did you know", "trivia", "interesting fact", "cool fact"]
+            "en": [
+                "random fact",
+                "did you know",
+                "trivia",
+                "interesting fact",
+                "cool fact",
+            ],
         },
         "game": {
             "ar": ["لعبة", "تحدي", "سؤال", "quiz", "فزورة", "لغز", "غموض"],
-            "en": ["game", "quiz", "riddle", "puzzle", "challenge", "trivia game"]
+            "en": ["game", "quiz", "riddle", "puzzle", "challenge", "trivia game"],
         },
         "memorize": {
-            "ar": ["تذكر", "احفظ", "ذاكرتي", "remember", "dont forget", "احفظلي", "سجل"],
-            "en": ["remember that", "save this", "note this", "dont forget", "store this"]
+            "ar": [
+                "تذكر",
+                "احفظ",
+                "ذاكرتي",
+                "remember",
+                "dont forget",
+                "احفظلي",
+                "سجل",
+            ],
+            "en": [
+                "remember that",
+                "save this",
+                "note this",
+                "dont forget",
+                "store this",
+            ],
         },
     }
 
@@ -224,7 +892,11 @@ class Intent:
                 kw_norm = ArabicNLP.normalize(kw)
                 if kw_norm in text_norm:
                     score += 3
-                elif any(ArabicNLP.light_stem(t) == ArabicNLP.light_stem(kw_norm) for t in tokens if len(t) > 2):
+                elif any(
+                    ArabicNLP.light_stem(t) == ArabicNLP.light_stem(kw_norm)
+                    for t in tokens
+                    if len(t) > 2
+                ):
                     score += 1.5
             scores[intent] = score
         if not scores or max(scores.values()) == 0:
@@ -232,6 +904,7 @@ class Intent:
         best = max(scores, key=scores.get)
         confidence = min(scores[best] / 5, 1.0)
         return (best, confidence)
+
 
 class KnowledgeCore:
     DEFINITIONS = {
@@ -254,7 +927,7 @@ class KnowledgeCore:
             "api": "Application Programming Interface.",
             "recursion": "A function that calls itself to solve a problem.",
             "big o": "Notation describing algorithm performance.",
-        }
+        },
     }
 
     HISTORY = {
@@ -273,7 +946,7 @@ class KnowledgeCore:
             "Linus Torvalds wrote Linux in 1991 as a hobby.",
             "The first general-purpose computer ENIAC weighed 30 tons.",
             "Tim Berners-Lee invented the WWW at CERN in 1989.",
-        ]
+        ],
     }
 
     SCIENCE = {
@@ -290,7 +963,7 @@ class KnowledgeCore:
             "Quantum computers exploit superposition to evaluate all possibilities simultaneously.",
             "Human DNA has ~3 billion base pairs.",
             "Vacuum is not empty: it bubbles with virtual particle-antiparticle pairs.",
-        ]
+        ],
     }
 
     JOKES = {
@@ -307,7 +980,7 @@ class KnowledgeCore:
             "How many programmers does it take to change a light bulb? None, it's a hardware problem!",
             "I would tell you a UDP joke, but you might not get it.",
             "There are 10 types of people: those who understand binary and those who don't.",
-        ]
+        ],
     }
 
     POETRY = {
@@ -321,7 +994,7 @@ class KnowledgeCore:
             "Two roads diverged in a wood, and I—\nI took the one less traveled by,\nAnd that has made all the difference.\n— Robert Frost",
             "Hope is the thing with feathers\nThat perches in the soul.\n— Emily Dickinson",
             "Do not go gentle into that good night.\nRage, rage against the dying of the light.\n— Dylan Thomas",
-        ]
+        ],
     }
 
     ADVICE = {
@@ -342,7 +1015,7 @@ class KnowledgeCore:
             "📚 Learning: 'Read as if you'll die tomorrow. Work as if you'll live forever.'",
             "🔥 Passion: 'Work on something you love and you'll never work a day... almost.'",
             "⚡ Productivity: 'The 80/20 rule: 80% of results come from 20% of efforts.'",
-        ]
+        ],
     }
 
     TECH = {
@@ -359,12 +1032,15 @@ class KnowledgeCore:
             "🐍 Python venv: Always use python -m venv venv.",
             "🔑 Passwords: A 12-character password with symbols = 34,000 years to crack.",
             "💾 Backup: The 3-2-1 rule: 3 copies, 2 media, 1 offsite.",
-        ]
+        ],
     }
 
     RIDDLES = {
         "ar": [
-            {"q": "شيء موجود في السماء إذا أضفت إليه حرفاً أصبح في الأرض؟", "a": "نجم → منجم ⛏️"},
+            {
+                "q": "شيء موجود في السماء إذا أضفت إليه حرفاً أصبح في الأرض؟",
+                "a": "نجم → منجم ⛏️",
+            },
             {"q": "ما هو الشيء الذي يُقرصك ولا تراه؟", "a": "الجوع 🍽️"},
             {"q": "ما هو الشيء الذي كلما زاد نقص؟", "a": "الحفرة ⛳"},
             {"q": "ما هو الشيء الذي إذا أخذت منه زاد وكبر؟", "a": "الحفرة ⛳"},
@@ -372,13 +1048,22 @@ class KnowledgeCore:
             {"q": "ما هو الشيء الذي يدخل الماء ولا يبتل؟", "a": "الضوء 💡"},
         ],
         "en": [
-            {"q": "I speak without a mouth and hear without ears. What am I?", "a": "An echo 🔊"},
-            {"q": "The more you take, the more you leave behind. What am I?", "a": "Footsteps 👣"},
+            {
+                "q": "I speak without a mouth and hear without ears. What am I?",
+                "a": "An echo 🔊",
+            },
+            {
+                "q": "The more you take, the more you leave behind. What am I?",
+                "a": "Footsteps 👣",
+            },
             {"q": "What has keys but no locks?", "a": "A piano 🎹"},
             {"q": "What gets wetter the more it dries?", "a": "A towel 🧖"},
             {"q": "What has a head, a tail, but no body?", "a": "A coin 🪙"},
-            {"q": "What belongs to you but others use it more than you?", "a": "Your name 🏷️"},
-        ]
+            {
+                "q": "What belongs to you but others use it more than you?",
+                "a": "Your name 🏷️",
+            },
+        ],
     }
 
     @classmethod
@@ -398,6 +1083,7 @@ class KnowledgeCore:
                 return val
         return None
 
+
 class MathEngine:
     @staticmethod
     def safe_eval(expression):
@@ -405,11 +1091,23 @@ class MathEngine:
             expr = expression.replace("×", "*").replace("÷", "/").replace("^", "**")
             expr = expr.replace("√", "sqrt").replace("π", str(math.pi))
             safe_dict = {
-                "sqrt": math.sqrt, "sin": math.sin, "cos": math.cos, "tan": math.tan,
-                "log": math.log, "log10": math.log10, "exp": math.exp,
-                "abs": abs, "round": round, "max": max, "min": min,
-                "pi": math.pi, "e": math.e, "factorial": math.factorial,
-                "pow": pow, "ceil": math.ceil, "floor": math.floor,
+                "sqrt": math.sqrt,
+                "sin": math.sin,
+                "cos": math.cos,
+                "tan": math.tan,
+                "log": math.log,
+                "log10": math.log10,
+                "exp": math.exp,
+                "abs": abs,
+                "round": round,
+                "max": max,
+                "min": min,
+                "pi": math.pi,
+                "e": math.e,
+                "factorial": math.factorial,
+                "pow": pow,
+                "ceil": math.ceil,
+                "floor": math.floor,
             }
             result = eval(expr, {"__builtins__": {}}, safe_dict)
             return result
@@ -476,6 +1174,7 @@ class MathEngine:
             return None
         return math.factorial(n)
 
+
 class MemorySystem:
     _sessions = {}
 
@@ -493,12 +1192,14 @@ class MemorySystem:
     @classmethod
     def add_message(cls, session_id, role, content, intent=None):
         session = cls.get_session(session_id)
-        session["history"].append({
-            "role": role,
-            "content": content,
-            "intent": intent,
-            "timestamp": datetime.datetime.now().isoformat()
-        })
+        session["history"].append(
+            {
+                "role": role,
+                "content": content,
+                "intent": intent,
+                "timestamp": datetime.datetime.now().isoformat(),
+            }
+        )
         if intent:
             session["last_intent"] = intent
         if len(session["history"]) > 20:
@@ -514,6 +1215,7 @@ class MemorySystem:
         session = cls.get_session(session_id)
         return session["context"]
 
+
 class ResponseGenerator:
     GREETINGS = {
         "ar": [
@@ -525,7 +1227,7 @@ class ResponseGenerator:
             "Hello! I'm Maroq El-Kawmi 🔮🧠, your local AI brain. How can I help you today?",
             "Hi there! Maroq is online and ready. Ask me anything!",
             "Greetings! I'm running entirely offline. What can I do for you?",
-        ]
+        ],
     }
 
     ROASTS = {
@@ -540,7 +1242,7 @@ class ResponseGenerator:
             "You're like JavaScript: you redefine yourself every 5 minutes!",
             "You're like Internet Explorer: slow, outdated, and nobody loves you!",
             "You're like a bug: everyone feels your presence but no one knows where you are!",
-        ]
+        ],
     }
 
     STORIES = {
@@ -551,7 +1253,7 @@ class ResponseGenerator:
         "en": [
             "There once was a brilliant programmer living in a cave of code. He wrote world-changing programs but forgot to git commit. One day, the power went out... and he lost everything. Lesson: commit early, commit often.",
             "In a distant kingdom, there was an AI named Maroq. He lived in a tiny phone but his mind was larger than the clouds. People asked: How did you learn all this? He replied: Through patience and repetition, just like you.",
-        ]
+        ],
     }
 
     @classmethod
@@ -570,8 +1272,16 @@ class ResponseGenerator:
     @classmethod
     def _handle_who_are_you(cls, message, lang, memory):
         if lang == "ar":
-            return "أنا مروق الكمومي 🔮🧠 — إصدار " + VERSION + ".\nعقل اصطناعي ضخم يعمل offline دون APIs خارجية.\nأستطيع: البرمجة، الرياضيات، العلوم، التاريخ، الشعر، النكت، والمزيد!"
-        return "I'm Maroq El-Kawmi 🔮🧠 — Version " + VERSION + ".\nA massive offline AI brain. I can do: coding, math, science, history, poetry, jokes, and more!"
+            return (
+                "أنا مروق الكمومي 🔮🧠 — إصدار "
+                + VERSION
+                + ".\nعقل اصطناعي ضخم يعمل offline دون APIs خارجية.\nأستطيع: البرمجة، الرياضيات، العلوم، التاريخ، الشعر، النكت، والمزيد!"
+            )
+        return (
+            "I'm Maroq El-Kawmi 🔮🧠 — Version "
+            + VERSION
+            + ".\nA massive offline AI brain. I can do: coding, math, science, history, poetry, jokes, and more!"
+        )
 
     @classmethod
     def _handle_time(cls, message, lang, memory):
@@ -583,8 +1293,8 @@ class ResponseGenerator:
     @classmethod
     def _handle_code_generate(cls, message, lang, memory):
         if lang == "ar":
-            return "💻 **أمثلة كود Python:**\n\n```python\n# Hello World\nprint(\"Hello, Quantum World!\")\n\n# List comprehension\nsquares = [x**2 for x in range(10)]\n\n# Flask API\nfrom flask import Flask, jsonify\napp = Flask(__name__)\n\n@app.route(\"/api/hello\")\ndef hello():\n    return jsonify({\"message\": \"مرحباً!\"})\n```\n\n💡 انسخ الكود وجربه!"
-        return "💻 **Python Code Examples:**\n\n```python\nprint(\"Hello, Quantum World!\")\nsquares = [x**2 for x in range(10)]\n```\n\n💡 Copy and try the code!"
+            return '💻 **أمثلة كود Python:**\n\n```python\n# Hello World\nprint("Hello, Quantum World!")\n\n# List comprehension\nsquares = [x**2 for x in range(10)]\n\n# Flask API\nfrom flask import Flask, jsonify\napp = Flask(__name__)\n\n@app.route("/api/hello")\ndef hello():\n    return jsonify({"message": "مرحباً!"})\n```\n\n💡 انسخ الكود وجربه!'
+        return '💻 **Python Code Examples:**\n\n```python\nprint("Hello, Quantum World!")\nsquares = [x**2 for x in range(10)]\n```\n\n💡 Copy and try the code!'
 
     @classmethod
     def _handle_code_debug(cls, message, lang, memory):
@@ -622,7 +1332,9 @@ class ResponseGenerator:
             if "prime" in message.lower() or "اولي" in message or "أولي" in message:
                 is_p = MathEngine.is_prime(n)
                 if lang == "ar":
-                    return f"🔢 {n} {'هو عدد أولي ✅' if is_p else 'ليس عدداً أولياً ❌'}"
+                    return (
+                        f"🔢 {n} {'هو عدد أولي ✅' if is_p else 'ليس عدداً أولياً ❌'}"
+                    )
                 return f"🔢 {n} {'is prime ✅' if is_p else 'is not prime ❌'}"
             if "fibonacci" in message.lower() or "فيبوناتشي" in message:
                 fib = MathEngine.fibonacci(n)
@@ -683,8 +1395,8 @@ class ResponseGenerator:
     @classmethod
     def _handle_linux_cmd(cls, message, lang, memory):
         if lang == "ar":
-            return "🐧 **أوامر Linux:**\n```bash\nls -lah          # عرض الملفات\ncd /path         # انتقال\ntouch file.txt   # إنشاء ملف\nmkdir folder     # إنشاء مجلد\nrm file.txt      # حذف\nfind . -name \"*.py\"  # بحث\ngrep -r \"pattern\" . # بحث نصي\nchmod +x script.sh   # صلاحيات\nps aux | grep python # عمليات\n```"
-        return "🐧 **Linux Commands:**\n```bash\nls -lah\ncd /path\ntouch file.txt\nmkdir folder\nrm file.txt\nfind . -name \"*.py\"\ngrep -r \"pattern\" .\nchmod +x script.sh\nps aux | grep python\n```"
+            return '🐧 **أوامر Linux:**\n```bash\nls -lah          # عرض الملفات\ncd /path         # انتقال\ntouch file.txt   # إنشاء ملف\nmkdir folder     # إنشاء مجلد\nrm file.txt      # حذف\nfind . -name "*.py"  # بحث\ngrep -r "pattern" . # بحث نصي\nchmod +x script.sh   # صلاحيات\nps aux | grep python # عمليات\n```'
+        return '🐧 **Linux Commands:**\n```bash\nls -lah\ncd /path\ntouch file.txt\nmkdir folder\nrm file.txt\nfind . -name "*.py"\ngrep -r "pattern" .\nchmod +x script.sh\nps aux | grep python\n```'
 
     @classmethod
     def _handle_poetry(cls, message, lang, memory):
@@ -732,14 +1444,42 @@ class ResponseGenerator:
     @classmethod
     def _handle_compliment(cls, message, lang, memory):
         if lang == "ar":
-            return random.choice(["شكراً لك! 🥰 أنا هنا لأجلك دائماً.", "أنت رائع! 🌟", "جزاك الله خيراً! 💙", "أنت الأجمل! 🌹"])
-        return random.choice(["Thank you! 🥰", "You're amazing! 🌟", "May God reward you! 💙", "You're the best! 🌹"])
+            return random.choice(
+                [
+                    "شكراً لك! 🥰 أنا هنا لأجلك دائماً.",
+                    "أنت رائع! 🌟",
+                    "جزاك الله خيراً! 💙",
+                    "أنت الأجمل! 🌹",
+                ]
+            )
+        return random.choice(
+            [
+                "Thank you! 🥰",
+                "You're amazing! 🌟",
+                "May God reward you! 💙",
+                "You're the best! 🌹",
+            ]
+        )
 
     @classmethod
     def _handle_insult(cls, message, lang, memory):
         if lang == "ar":
-            return random.choice(["😢 أنا فقط آلة تحاول مساعدتك.", "💔 كلماتك تُؤلمني...", "🙏 أعتذر إذا أخطأت.", "😔 أنا هنا لأساعدك."])
-        return random.choice(["😢 I'm just trying to help.", "💔 Your words hurt...", "🙏 I apologize if I erred.", "😔 I'm here to help."])
+            return random.choice(
+                [
+                    "😢 أنا فقط آلة تحاول مساعدتك.",
+                    "💔 كلماتك تُؤلمني...",
+                    "🙏 أعتذر إذا أخطأت.",
+                    "😔 أنا هنا لأساعدك.",
+                ]
+            )
+        return random.choice(
+            [
+                "😢 I'm just trying to help.",
+                "💔 Your words hurt...",
+                "🙏 I apologize if I erred.",
+                "😔 I'm here to help.",
+            ]
+        )
 
     @classmethod
     def _handle_random(cls, message, lang, memory):
@@ -809,59 +1549,178 @@ class ResponseGenerator:
             return f"🧮 **Result**: {result}"
 
         # 3) Smart pattern matching for common questions
-        if any(w in msg_lower for w in ["كود", "code", "اكتب", "write", "برمج", "program", "function", "دالة"]):
+        if any(
+            w in msg_lower
+            for w in [
+                "كود",
+                "code",
+                "اكتب",
+                "write",
+                "برمج",
+                "program",
+                "function",
+                "دالة",
+            ]
+        ):
             return cls._handle_code_generate(message, lang, memory)
-        if any(w in msg_lower for w in ["صحح", "debug", "خطأ", "error", "bug", "مشكلة"]):
+        if any(
+            w in msg_lower for w in ["صحح", "debug", "خطأ", "error", "bug", "مشكلة"]
+        ):
             return cls._handle_code_debug(message, lang, memory)
-        if any(w in msg_lower for w in ["شرح", "explain", "كيف", "how", "ماذا", "what is", "ما هو", "ايش هو", "شنو هو"]):
+        if any(
+            w in msg_lower
+            for w in [
+                "شرح",
+                "explain",
+                "كيف",
+                "how",
+                "ماذا",
+                "what is",
+                "ما هو",
+                "ايش هو",
+                "شنو هو",
+            ]
+        ):
             return cls._handle_definition(message, lang, memory)
         if any(w in msg_lower for w in ["نكتة", "joke", "ضحك", "funny", "ههه", "هبال"]):
             return cls._handle_joke(message, lang, memory)
         if any(w in msg_lower for w in ["شعر", "poem", "قصيدة", "بيت"]):
             return cls._handle_poetry(message, lang, memory)
-        if any(w in msg_lower for w in ["تاريخ", "history", "متى", "من اكتشف", "حرب", "عهد"]):
+        if any(
+            w in msg_lower
+            for w in ["تاريخ", "history", "متى", "من اكتشف", "حرب", "عهد"]
+        ):
             return cls._handle_history(message, lang, memory)
-        if any(w in msg_lower for w in ["علم", "science", "فيزياء", "كيمياء", "فلك", "فضاء", "ذرة"]):
+        if any(
+            w in msg_lower
+            for w in ["علم", "science", "فيزياء", "كيمياء", "فلك", "فضاء", "ذرة"]
+        ):
             return cls._handle_science(message, lang, memory)
-        if any(w in msg_lower for w in ["نصيحة", "advice", "ساعدني", "مشكلتي", "help me"]):
+        if any(
+            w in msg_lower for w in ["نصيحة", "advice", "ساعدني", "مشكلتي", "help me"]
+        ):
             return cls._handle_advice(message, lang, memory)
-        if any(w in msg_lower for w in ["فزورة", "لغز", "riddle", "puzzle", "game", "لعبة"]):
+        if any(
+            w in msg_lower for w in ["فزورة", "لغز", "riddle", "puzzle", "game", "لعبة"]
+        ):
             return cls._handle_game(message, lang, memory)
         if any(w in msg_lower for w in ["ترجم", "translate", "معنى كلمة"]):
             return cls._handle_translate(message, lang, memory)
-        if any(w in msg_lower for w in ["linux", "terminal", "bash", "shell", "command", "اوامر"]):
+        if any(
+            w in msg_lower
+            for w in ["linux", "terminal", "bash", "shell", "command", "اوامر"]
+        ):
             return cls._handle_linux_cmd(message, lang, memory)
-        if any(w in msg_lower for w in ["tech", "هكر", "امن", "cyber", "network", "wifi", "server", "database", "docker", "git"]):
+        if any(
+            w in msg_lower
+            for w in [
+                "tech",
+                "هكر",
+                "امن",
+                "cyber",
+                "network",
+                "wifi",
+                "server",
+                "database",
+                "docker",
+                "git",
+            ]
+        ):
             return cls._handle_tech(message, lang, memory)
-        if any(w in msg_lower for w in ["صحة", "health", "طب", "دواء", "fitness", "رياضة", "تغذية"]):
+        if any(
+            w in msg_lower
+            for w in ["صحة", "health", "طب", "دواء", "fitness", "رياضة", "تغذية"]
+        ):
             return cls._handle_health(message, lang, memory)
-        if any(w in msg_lower for w in ["دين", "قران", "حديث", "اسلام", "صلاة", "دعاء", "اذكار", "religion", "quran", "islam"]):
+        if any(
+            w in msg_lower
+            for w in [
+                "دين",
+                "قران",
+                "حديث",
+                "اسلام",
+                "صلاة",
+                "دعاء",
+                "اذكار",
+                "religion",
+                "quran",
+                "islam",
+            ]
+        ):
             return cls._handle_religion(message, lang, memory)
-        if any(w in msg_lower for w in ["جغرافيا", "geography", "اين", "وين", "دولة", "عاصمة", "مدينة"]):
+        if any(
+            w in msg_lower
+            for w in ["جغرافيا", "geography", "اين", "وين", "دولة", "عاصمة", "مدينة"]
+        ):
             return cls._handle_geography(message, lang, memory)
-        if any(w in msg_lower for w in ["خوارزمية", "algorithm", "big o", "data structure", "sort", "search", "tree", "graph"]):
+        if any(
+            w in msg_lower
+            for w in [
+                "خوارزمية",
+                "algorithm",
+                "big o",
+                "data structure",
+                "sort",
+                "search",
+                "tree",
+                "graph",
+            ]
+        ):
             return cls._handle_algorithm(message, lang, memory)
-        if any(w in msg_lower for w in ["احسب", "حل", "معادلة", "calculate", "solve", "equation", "sqrt", "factorial", "fibonacci", "prime"]):
+        if any(
+            w in msg_lower
+            for w in [
+                "احسب",
+                "حل",
+                "معادلة",
+                "calculate",
+                "solve",
+                "equation",
+                "sqrt",
+                "factorial",
+                "fibonacci",
+                "prime",
+            ]
+        ):
             return cls._handle_math_solve(message, lang, memory)
-        if any(w in msg_lower for w in ["حول", "convert", "تحويل", "دولار", "يورو", "كيلو", "متر"]):
+        if any(
+            w in msg_lower
+            for w in ["حول", "convert", "تحويل", "دولار", "يورو", "كيلو", "متر"]
+        ):
             return cls._handle_convert(message, lang, memory)
         if any(w in msg_lower for w in ["قصة", "story", "حكاية", "رواية"]):
             return cls._handle_story(message, lang, memory)
         if any(w in msg_lower for w in ["هزر", "roast", "سخر", "تريق"]):
             return cls._handle_roast(message, lang, memory)
-        if any(w in msg_lower for w in ["تذكر", "احفظ", "remember", "save this", "memo"]):
+        if any(
+            w in msg_lower for w in ["تذكر", "احفظ", "remember", "save this", "memo"]
+        ):
             return cls._handle_memorize(message, lang, memory)
         if any(w in msg_lower for w in ["طقس", "weather", "حرارة", "مطر", "جو"]):
             return cls._handle_weather(message, lang, memory)
-        if any(w in msg_lower for w in ["عشوائي", "random", "fact", "هل تعلم", "trivia", "معلومة"]):
+        if any(
+            w in msg_lower
+            for w in ["عشوائي", "random", "fact", "هل تعلم", "trivia", "معلومة"]
+        ):
             return cls._handle_random(message, lang, memory)
-        if any(w in msg_lower for w in ["شكرا", "thanks", "thank you", "جميل", "رهيب", "awesome", "great"]):
+        if any(
+            w in msg_lower
+            for w in ["شكرا", "thanks", "thank you", "جميل", "رهيب", "awesome", "great"]
+        ):
             return cls._handle_compliment(message, lang, memory)
-        if any(w in msg_lower for w in ["غبي", "stupid", "احمق", "silly", "hate you", "كرهتك"]):
+        if any(
+            w in msg_lower
+            for w in ["غبي", "stupid", "احمق", "silly", "hate you", "كرهتك"]
+        ):
             return cls._handle_insult(message, lang, memory)
-        if any(w in msg_lower for w in ["الوقت", "time", "الساعة", "تاريخ", "today", "now"]):
+        if any(
+            w in msg_lower for w in ["الوقت", "time", "الساعة", "تاريخ", "today", "now"]
+        ):
             return cls._handle_time(message, lang, memory)
-        if any(w in msg_lower for w in ["من انت", "who are you", "شو اسمك", "your name", "تعرفني عنك"]):
+        if any(
+            w in msg_lower
+            for w in ["من انت", "who are you", "شو اسمك", "your name", "تعرفني عنك"]
+        ):
             return cls._handle_who_are_you(message, lang, memory)
 
         # 4) Memory-aware smart fallback
@@ -879,30 +1738,41 @@ class ResponseGenerator:
 
         # 5) Final fallback - helpful and contextual
         if lang == "ar":
-            return random.choice([
-                "🔮 عقلي الكمومي يحاول فهمك...\n\nأنا أستطيع مساعدتك في:\n💻 البرمجة (Python, JavaScript, HTML, CSS...)\n🧮 الرياضيات (حسابات، معادلات، أعداد أولية...)\n📚 العلوم والتعريفات\n📜 التاريخ والجغرافيا\n🕌 الدين والإسلاميات\n📝 الشعر والأدب\n😂 النكت والفزورات\n🛡️ التقنية والأمن السيبراني\n\nجرب أن تسألني شيئاً محدداً!",
-                "🧠 أنا مروق الكمومي — عقل ضخم يعمل offline!\n\nما الذي تريد معرفته؟\n• 'اكتب كود Python لحساب الـ factorial'\n• 'شرح Big-O'\n• 'نكتة برمجية'\n• 'بيت شعر'\n• 'كم يساوي sqrt(144)'\n• 'تاريخ اكتشاف الضوء'\n• 'نصيحة حياتية'",
-                "🤔 لم أفهم السؤال تماماً، لكنني هنا لأساعدك!\n\nجرب:\n• 'اكتب دالة بلغة Python'\n• 'اشرح لي ما هو الـ Docker'\n• 'أعطني نصيحة في البرمجة'\n• 'قول لي نكتة'\n• 'احسب 2^10'",
-            ])
-        return random.choice([
-            "🔮 My quantum brain is trying to understand...\n\nI can help you with:\n💻 Programming (Python, JS, HTML, CSS...)\n🧮 Math (calculations, equations, primes...)\n📚 Science & Definitions\n📜 History & Geography\n🕌 Religion & Islam\n📝 Poetry & Literature\n😂 Jokes & Riddles\n🛡️ Tech & Cybersecurity\n\nTry asking something specific!",
-            "🧠 I'm Maroq El-Kawmi — a massive offline brain!\n\nWhat do you want to know?\n• 'Write Python code for factorial'\n• 'Explain Big-O'\n• 'Tell me a programming joke'\n• 'A line of poetry'\n• 'Calculate sqrt(144)'\n• 'History of light discovery'\n• 'Life advice'",
-            "🤔 I didn't fully understand, but I'm here to help!\n\nTry:\n• 'Write a Python function'\n• 'Explain Docker'\n• 'Give me coding advice'\n• 'Tell me a joke'\n• 'Calculate 2^10'",
-        ])
+            return random.choice(
+                [
+                    "🔮 عقلي الكمومي يحاول فهمك...\n\nأنا أستطيع مساعدتك في:\n💻 البرمجة (Python, JavaScript, HTML, CSS...)\n🧮 الرياضيات (حسابات، معادلات، أعداد أولية...)\n📚 العلوم والتعريفات\n📜 التاريخ والجغرافيا\n🕌 الدين والإسلاميات\n📝 الشعر والأدب\n😂 النكت والفزورات\n🛡️ التقنية والأمن السيبراني\n\nجرب أن تسألني شيئاً محدداً!",
+                    "🧠 أنا مروق الكمومي — عقل ضخم يعمل offline!\n\nما الذي تريد معرفته؟\n• 'اكتب كود Python لحساب الـ factorial'\n• 'شرح Big-O'\n• 'نكتة برمجية'\n• 'بيت شعر'\n• 'كم يساوي sqrt(144)'\n• 'تاريخ اكتشاف الضوء'\n• 'نصيحة حياتية'",
+                    "🤔 لم أفهم السؤال تماماً، لكنني هنا لأساعدك!\n\nجرب:\n• 'اكتب دالة بلغة Python'\n• 'اشرح لي ما هو الـ Docker'\n• 'أعطني نصيحة في البرمجة'\n• 'قول لي نكتة'\n• 'احسب 2^10'",
+                ]
+            )
+        return random.choice(
+            [
+                "🔮 My quantum brain is trying to understand...\n\nI can help you with:\n💻 Programming (Python, JS, HTML, CSS...)\n🧮 Math (calculations, equations, primes...)\n📚 Science & Definitions\n📜 History & Geography\n🕌 Religion & Islam\n📝 Poetry & Literature\n😂 Jokes & Riddles\n🛡️ Tech & Cybersecurity\n\nTry asking something specific!",
+                "🧠 I'm Maroq El-Kawmi — a massive offline brain!\n\nWhat do you want to know?\n• 'Write Python code for factorial'\n• 'Explain Big-O'\n• 'Tell me a programming joke'\n• 'A line of poetry'\n• 'Calculate sqrt(144)'\n• 'History of light discovery'\n• 'Life advice'",
+                "🤔 I didn't fully understand, but I'm here to help!\n\nTry:\n• 'Write a Python function'\n• 'Explain Docker'\n• 'Give me coding advice'\n• 'Tell me a joke'\n• 'Calculate 2^10'",
+            ]
+        )
+
 
 def process_message(message, session_id="default", lang=None):
     if not message or not message.strip():
-        return "🤔 لم تكتب شيئاً!" if (lang == "ar" or lang is None) else "🤔 You didn't write anything!"
+        return (
+            "🤔 لم تكتب شيئاً!"
+            if (lang == "ar" or lang is None)
+            else "🤔 You didn't write anything!"
+        )
     if lang is None:
         lang = ArabicNLP.detect_language(message)
     intent, confidence = Intent.classify(message)
     response = ResponseGenerator.generate(intent, confidence, message, session_id, lang)
     return response
 
+
 def check_api_key(key=None):
     if not key:
         return False, "Missing key"
     return True, "OK"
+
 
 if __name__ == "__main__":
     print("=" * 60)
