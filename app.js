@@ -20,6 +20,11 @@
     const timerEl = $("#timer");
     const quantumScore = $("#quantumScore");
     const speakBtn = $("#speakBtn");
+    const faqJsonInput = $("#faqJsonInput");
+    const faqImportBtn = $("#faqImportBtn");
+    const faqExportBtn = $("#faqExportBtn");
+    const faqState = $("#proFaqState");
+    let faqAccessGranted = false;
 
     // ─── المؤقت ───────────────────────────────
     let seconds = 0;
@@ -48,6 +53,118 @@
     }
     checkStatus();
     setInterval(checkStatus, 10000);
+
+    // ─── قاعدة الأسئلة الشائعة المخصصة ─────────
+    function setFaqControls(enabled, message) {
+        faqAccessGranted = enabled;
+        if (faqJsonInput) faqJsonInput.disabled = !enabled;
+        if (faqImportBtn) faqImportBtn.disabled = !enabled;
+        if (faqExportBtn) faqExportBtn.disabled = !enabled;
+        if (faqState) faqState.textContent = message;
+    }
+
+    async function readJsonResponse(response) {
+        try {
+            return await response.json();
+        } catch (error) {
+            return null;
+        }
+    }
+
+    function faqErrorMessage(data, fallback) {
+        if (data && data.error && data.error.message) return data.error.message;
+        return fallback;
+    }
+
+    async function refreshFaqAccess() {
+        try {
+            const response = await fetch(`${API_URL}/api/pro/faq/status`, {
+                method: "GET",
+                credentials: "same-origin",
+                cache: "no-store"
+            });
+            const data = await readJsonResponse(response);
+            if (response.ok && data && data.pro === true) {
+                setFaqControls(true, "برو مفعل لحسابك — يمكنك حفظ أو تصدير JSON.");
+                return;
+            }
+            setFaqControls(false, faqErrorMessage(data, "يتطلب إعداد شراء برو والتحقق من الحساب."));
+        } catch (error) {
+            setFaqControls(false, "تعذر التحقق من استحقاق برو بأمان.");
+        }
+    }
+
+    async function importFaqDocument() {
+        if (!faqAccessGranted || !faqJsonInput) return;
+        const rawDocument = faqJsonInput.value.trim();
+        if (!rawDocument) {
+            if (faqState) faqState.textContent = "ألصق مستند JSON مراجعاً أولاً.";
+            return;
+        }
+
+        let document;
+        try {
+            document = JSON.parse(rawDocument);
+        } catch (error) {
+            if (faqState) faqState.textContent = "JSON غير صالح؛ راجع الفواصل والأقواس.";
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/api/pro/faq/import`, {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(document)
+            });
+            const data = await readJsonResponse(response);
+            if (!response.ok || !data || !data.ok) {
+                setFaqControls(false, faqErrorMessage(data, "تعذر حفظ قاعدة الأسئلة الشائعة."));
+                return;
+            }
+            const result = data.result;
+            if (faqState) {
+                faqState.textContent = `تم الدمج: ${result.added} جديد، ${result.updated} محدّث، الإجمالي ${result.total}.`;
+            }
+        } catch (error) {
+            if (faqState) faqState.textContent = "تعذر الاتصال بالخادم أثناء الحفظ.";
+        }
+    }
+
+    async function exportFaqDocument() {
+        if (!faqAccessGranted) return;
+        try {
+            const response = await fetch(`${API_URL}/api/pro/faq/export`, {
+                method: "GET",
+                credentials: "same-origin",
+                cache: "no-store"
+            });
+            const data = await readJsonResponse(response);
+            if (!response.ok || !data || data.version !== 1 || !Array.isArray(data.entries)) {
+                setFaqControls(false, faqErrorMessage(data, "تعذر تصدير قاعدة الأسئلة الشائعة."));
+                return;
+            }
+
+            const serialized = JSON.stringify(data, null, 2);
+            if (faqJsonInput) faqJsonInput.value = serialized;
+            const blob = new Blob([`${serialized}\n`], {type: "application/json;charset=utf-8"});
+            const downloadUrl = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = downloadUrl;
+            link.download = "marokecho-custom-faq.json";
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(downloadUrl);
+            if (faqState) faqState.textContent = "تم تصدير JSON المملوك لحسابك.";
+        } catch (error) {
+            if (faqState) faqState.textContent = "تعذر الاتصال بالخادم أثناء التصدير.";
+        }
+    }
+
+    if (faqImportBtn) faqImportBtn.addEventListener("click", importFaqDocument);
+    if (faqExportBtn) faqExportBtn.addEventListener("click", exportFaqDocument);
+    refreshFaqAccess();
 
     // ─── إضافة رسالة ──────────────────────────
     function addMessage(text, role = "assistant", engine = "") {

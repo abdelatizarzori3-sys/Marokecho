@@ -5,3 +5,4 @@ cosmic_memory.json
 __pycache__/
 *.pyc
 *.pyo
+backend/instance/
