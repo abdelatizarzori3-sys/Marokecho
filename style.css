@@ -130,6 +130,68 @@ body {
   font-size: 0.9rem;
 }
 
+/* ─── قاعدة FAQ برو ─── */
+.pro-faq-panel {
+  background: var(--bg-card);
+  border: 1px solid #3b2a58;
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+.pro-faq-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.pro-faq-heading h2 { font-size: 1rem; color: var(--primary); }
+.pro-faq-heading h2 span {
+  color: #fff;
+  background: var(--accent);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  padding: 2px 8px;
+}
+.pro-faq-state { color: var(--warning); font-size: 0.78rem; text-align: left; }
+.pro-faq-panel > p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 8px; }
+.pro-faq-panel .pro-faq-note { color: var(--warning); font-size: 0.8rem; }
+.faq-format { margin: 10px 0; color: var(--text-muted); font-size: 0.85rem; }
+.faq-format summary { cursor: pointer; color: var(--primary); }
+.faq-format pre {
+  direction: ltr;
+  text-align: left;
+  overflow-x: auto;
+  white-space: pre;
+  background: #0f172a;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 8px;
+  color: #c4b5fd;
+  font-size: 0.75rem;
+}
+.pro-faq-panel label { display: block; margin-bottom: 6px; font-size: 0.85rem; }
+#faqJsonInput {
+  width: 100%;
+  resize: vertical;
+  direction: ltr;
+  text-align: left;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  padding: 10px;
+}
+#faqJsonInput:focus { border-color: var(--primary); outline: none; }
+#faqJsonInput:disabled { cursor: not-allowed; opacity: 0.55; }
+.pro-faq-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.pro-faq-actions button:disabled { cursor: not-allowed; opacity: 0.55; }
+.faq-export { background: #475569; }
+
 /* ─── المحادثة ─── */
 .chat-section {
   background: var(--bg-card);
@@ -303,3 +365,10 @@ body {
   .header h1 { font-size: 1.3rem; }
   #app { padding: 8px; }
 }
+
+
+/* Future interface: Moroccan knowledge mosaic */
+:root{--bg:#090f1d;--bg-card:rgba(18,30,53,.92);--text:#eff6ff;--text-muted:#a3b2c8;--primary:#6ce7ff;--primary-dark:#1d94c3;--accent:#b88cff;--success:#63f2ba;--radius:18px;--shadow:0 1.1rem 3rem rgba(0,0,0,.27)}
+body{background:radial-gradient(circle at 88% 4%,rgba(108,231,255,.19),transparent 26rem),radial-gradient(circle at 5% 62%,rgba(184,140,255,.16),transparent 30rem),var(--bg)}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.24;background:linear-gradient(45deg,transparent 46%,rgba(108,231,255,.12) 47% 53%,transparent 54%),linear-gradient(-45deg,transparent 46%,rgba(184,140,255,.1) 47% 53%,transparent 54%);background-size:3.6rem 3.6rem;mask-image:linear-gradient(#000,transparent 80%)}
+#app{max-width:680px}.header,.weather-panel,.alerts,.lang-selector,.pro-faq-panel,.chat-section{border:1px solid rgba(108,231,255,.17);background:linear-gradient(145deg,rgba(20,35,63,.92),rgba(9,15,29,.92));box-shadow:var(--shadow),inset 0 1px rgba(255,255,255,.05)}.header{border-radius:0 0 1.2rem 1.2rem;backdrop-filter:blur(12px)}.header h1{background:linear-gradient(100deg,#e6fcff,#6ce7ff 47%,#b88cff);-webkit-background-clip:text}.pro-faq-panel{position:relative;overflow:hidden;border-color:rgba(184,140,255,.34)}.pro-faq-panel::before{content:"FAQ // PRO";position:absolute;top:.65rem;left:.8rem;color:rgba(184,140,255,.72);font:700 .58rem ui-monospace,monospace;letter-spacing:.14em}.msg-bubble{border:1px solid rgba(108,231,255,.12);box-shadow:0 .45rem 1.1rem rgba(0,0,0,.13)}.msg-bubble.user,.btn-small{background:linear-gradient(135deg,#1d94c3,#b88cff)}button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--primary);outline-offset:3px}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}

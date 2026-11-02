@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """MAROKECHO QUANTUM BRAIN v4.0"""
 
+import ast
+import operator
 import re
 import json
 import random
@@ -10,6 +12,8 @@ import hashlib
 import os
 from typing import Dict, List, Tuple, Optional, Any
 from collections import defaultdict
+
+from pro_faq import find_faq_answer
 
 VERSION = "4.0-QUANTUM-OFFLINE"
 BUILD_DATE = "2026-08-23"
@@ -401,20 +405,91 @@ class KnowledgeCore:
 class MathEngine:
     @staticmethod
     def safe_eval(expression):
+        """احسب تعبيراً عددياً مقيداً / Evaluate only a bounded arithmetic AST."""
+
         try:
+            if not isinstance(expression, str) or len(expression) > 200:
+                return None
             expr = expression.replace("×", "*").replace("÷", "/").replace("^", "**")
             expr = expr.replace("√", "sqrt").replace("π", str(math.pi))
-            safe_dict = {
-                "sqrt": math.sqrt, "sin": math.sin, "cos": math.cos, "tan": math.tan,
-                "log": math.log, "log10": math.log10, "exp": math.exp,
-                "abs": abs, "round": round, "max": max, "min": min,
-                "pi": math.pi, "e": math.e, "factorial": math.factorial,
-                "pow": pow, "ceil": math.ceil, "floor": math.floor,
-            }
-            result = eval(expr, {"__builtins__": {}}, safe_dict)
+            tree = ast.parse(expr, mode="eval")
+            result = MathEngine._evaluate_ast(tree.body)
+            if not isinstance(result, (int, float)) or isinstance(result, bool):
+                return None
+            if isinstance(result, float) and not math.isfinite(result):
+                return None
             return result
         except Exception:
             return None
+
+    @staticmethod
+    def _evaluate_ast(node):
+        """تقييم عقد حسابية مسموحة فقط / Evaluate a whitelisted arithmetic AST node."""
+
+        if isinstance(node, ast.Constant):
+            if isinstance(node.value, (int, float)) and not isinstance(node.value, bool):
+                return node.value
+            raise ValueError("Only numeric constants are allowed")
+
+        if isinstance(node, ast.Name):
+            constants = {"pi": math.pi, "e": math.e}
+            if node.id in constants:
+                return constants[node.id]
+            raise ValueError("Unknown name")
+
+        if isinstance(node, ast.UnaryOp) and isinstance(node.op, (ast.UAdd, ast.USub)):
+            operand = MathEngine._evaluate_ast(node.operand)
+            return operand if isinstance(node.op, ast.UAdd) else -operand
+
+        if isinstance(node, ast.BinOp):
+            binary_operators = {
+                ast.Add: operator.add,
+                ast.Sub: operator.sub,
+                ast.Mult: operator.mul,
+                ast.Div: operator.truediv,
+                ast.FloorDiv: operator.floordiv,
+                ast.Mod: operator.mod,
+                ast.Pow: operator.pow,
+            }
+            operation = binary_operators.get(type(node.op))
+            if operation is None:
+                raise ValueError("Operator is not allowed")
+            left = MathEngine._evaluate_ast(node.left)
+            right = MathEngine._evaluate_ast(node.right)
+            if isinstance(node.op, ast.Pow) and (abs(right) > 100 or abs(left) > 1_000_000):
+                raise ValueError("Exponent is too large")
+            return operation(left, right)
+
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and not node.keywords:
+            functions = {
+                "sqrt": math.sqrt,
+                "sin": math.sin,
+                "cos": math.cos,
+                "tan": math.tan,
+                "log": math.log,
+                "log10": math.log10,
+                "exp": math.exp,
+                "abs": abs,
+                "round": round,
+                "max": max,
+                "min": min,
+                "factorial": math.factorial,
+                "pow": pow,
+                "ceil": math.ceil,
+                "floor": math.floor,
+            }
+            function = functions.get(node.func.id)
+            if function is None or len(node.args) > 2:
+                raise ValueError("Function is not allowed")
+            arguments = [MathEngine._evaluate_ast(argument) for argument in node.args]
+            if node.func.id == "factorial":
+                if len(arguments) != 1 or int(arguments[0]) != arguments[0] or arguments[0] > 10_000:
+                    raise ValueError("Invalid factorial")
+            if node.func.id == "pow" and (len(arguments) != 2 or abs(arguments[1]) > 100):
+                raise ValueError("Invalid power")
+            return function(*arguments)
+
+        raise ValueError("Expression node is not allowed")
 
     @staticmethod
     def solve_equation(equation_str):
@@ -890,11 +965,19 @@ class ResponseGenerator:
             "🤔 I didn't fully understand, but I'm here to help!\n\nTry:\n• 'Write a Python function'\n• 'Explain Docker'\n• 'Give me coding advice'\n• 'Tell me a joke'\n• 'Calculate 2^10'",
         ])
 
-def process_message(message, session_id="default", lang=None):
+def process_message(message, session_id="default", lang=None, custom_faq_document=None):
+    """أنشئ رداً محلياً / Generate a local reply with an optional verified FAQ first."""
+
     if not message or not message.strip():
         return "🤔 لم تكتب شيئاً!" if (lang == "ar" or lang is None) else "🤔 You didn't write anything!"
-    if lang is None:
+    if lang not in {"ar", "en"}:
         lang = ArabicNLP.detect_language(message)
+    if custom_faq_document:
+        faq_answer = find_faq_answer(message, custom_faq_document)
+        if faq_answer:
+            MemorySystem.add_message(session_id, "user", message, "custom_faq")
+            MemorySystem.add_message(session_id, "assistant", faq_answer, "custom_faq")
+            return faq_answer
     intent, confidence = Intent.classify(message)
     response = ResponseGenerator.generate(intent, confidence, message, session_id, lang)
     return response

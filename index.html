@@ -61,6 +61,36 @@
     </select>
   </section>
 
+  <!-- قاعدة الأسئلة الشائعة المخصصة (برو) -->
+  <section class="pro-faq-panel" aria-labelledby="proFaqTitle">
+    <div class="pro-faq-heading">
+      <h2 id="proFaqTitle">قاعدة أسئلة شائعة مخصصة <span>برو</span></h2>
+      <span id="proFaqState" class="pro-faq-state" role="status">جارٍ التحقق…</span>
+    </div>
+    <p>ألصق JSON مراجعاً لحفظ أسئلة مؤسستك محلياً ودمج إجاباته في المحادثة.</p>
+    <p class="pro-faq-note">لا يفتح زر الحفظ الميزة ولا يثبت الدفع؛ يلزم حساب واستحقاق اشتراك يتحقق منه الخادم.</p>
+    <details class="faq-format">
+      <summary>عرض صيغة JSON المطلوبة</summary>
+      <pre>{
+  "version": 1,
+  "entries": [
+    {
+      "id": "working-hours",
+      "question": "ما هي ساعات العمل؟",
+      "answer": "نستقبل الاستفسارات من الأحد إلى الخميس، 9 صباحاً إلى 5 مساءً.",
+      "keywords": ["ساعات العمل", "مواعيد الدوام"]
+    }
+  ]
+}</pre>
+    </details>
+    <label for="faqJsonInput">مستند الأسئلة والأجوبة</label>
+    <textarea id="faqJsonInput" rows="8" maxlength="65536" disabled spellcheck="false" placeholder="الصق مستند JSON المراجع هنا"></textarea>
+    <div class="pro-faq-actions">
+      <button id="faqImportBtn" class="btn-small" type="button" disabled>حفظ ودمج الأسئلة</button>
+      <button id="faqExportBtn" class="btn-small faq-export" type="button" disabled>تصدير JSON</button>
+    </div>
+  </section>
+
   <!-- منطقة المحادثة -->
   <section class="chat-section">
     <div id="chatMessages" class="chat-messages">
