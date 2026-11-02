@@ -365,3 +365,10 @@ body {
   .header h1 { font-size: 1.3rem; }
   #app { padding: 8px; }
 }
+
+
+/* Future interface: Moroccan knowledge mosaic */
+:root{--bg:#090f1d;--bg-card:rgba(18,30,53,.92);--text:#eff6ff;--text-muted:#a3b2c8;--primary:#6ce7ff;--primary-dark:#1d94c3;--accent:#b88cff;--success:#63f2ba;--radius:18px;--shadow:0 1.1rem 3rem rgba(0,0,0,.27)}
+body{background:radial-gradient(circle at 88% 4%,rgba(108,231,255,.19),transparent 26rem),radial-gradient(circle at 5% 62%,rgba(184,140,255,.16),transparent 30rem),var(--bg)}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.24;background:linear-gradient(45deg,transparent 46%,rgba(108,231,255,.12) 47% 53%,transparent 54%),linear-gradient(-45deg,transparent 46%,rgba(184,140,255,.1) 47% 53%,transparent 54%);background-size:3.6rem 3.6rem;mask-image:linear-gradient(#000,transparent 80%)}
+#app{max-width:680px}.header,.weather-panel,.alerts,.lang-selector,.pro-faq-panel,.chat-section{border:1px solid rgba(108,231,255,.17);background:linear-gradient(145deg,rgba(20,35,63,.92),rgba(9,15,29,.92));box-shadow:var(--shadow),inset 0 1px rgba(255,255,255,.05)}.header{border-radius:0 0 1.2rem 1.2rem;backdrop-filter:blur(12px)}.header h1{background:linear-gradient(100deg,#e6fcff,#6ce7ff 47%,#b88cff);-webkit-background-clip:text}.pro-faq-panel{position:relative;overflow:hidden;border-color:rgba(184,140,255,.34)}.pro-faq-panel::before{content:"FAQ // PRO";position:absolute;top:.65rem;left:.8rem;color:rgba(184,140,255,.72);font:700 .58rem ui-monospace,monospace;letter-spacing:.14em}.msg-bubble{border:1px solid rgba(108,231,255,.12);box-shadow:0 .45rem 1.1rem rgba(0,0,0,.13)}.msg-bubble.user,.btn-small{background:linear-gradient(135deg,#1d94c3,#b88cff)}button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--primary);outline-offset:3px}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
